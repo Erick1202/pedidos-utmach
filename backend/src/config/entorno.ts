@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { z } from "zod";
+import { esquemaOrigenesCors } from "./cors.js";
 
 /**
  * Validación de las variables de entorno del backend.
@@ -20,7 +21,8 @@ const esquemaEntorno = z.object({
     .int("PORT debe ser un número entero")
     .min(1, "PORT debe estar entre 1 y 65535")
     .max(65535, "PORT debe estar entre 1 y 65535")
-    .default(3000)
+    .default(3000),
+  CORS_ORIGINS: esquemaOrigenesCors
 });
 
 const resultado = esquemaEntorno.safeParse(process.env);

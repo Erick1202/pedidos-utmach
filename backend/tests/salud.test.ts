@@ -42,20 +42,4 @@ describe("GET /api/salud", () => {
     expect(respuesta.status).toBe(404);
     expect(respuesta.body).toEqual({ error: "Ruta no encontrada" });
   });
-
-  it("solo permite CORS desde http://localhost:4200", async () => {
-    const permitida = await request(app)
-      .get("/api/salud")
-      .set("Origin", "http://localhost:4200");
-
-    expect(permitida.headers["access-control-allow-origin"]).toBe(
-      "http://localhost:4200"
-    );
-
-    const ajena = await request(app)
-      .get("/api/salud")
-      .set("Origin", "http://sitio-no-permitido.example");
-
-    expect(ajena.headers["access-control-allow-origin"]).toBeUndefined();
-  });
 });

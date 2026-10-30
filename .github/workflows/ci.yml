@@ -1,0 +1,105 @@
+# Integración y despliegue continuos de PedidosUTMACH (specs/007-ci-github-actions).
+# Los nombres de los jobs (backend, frontend, deploy) se usan como status checks
+# obligatorios: no cambiarlos sin actualizar la protección de la rama main.
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Una ejecución nueva de la misma rama o PR cancela la anterior.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  backend:
+    name: backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      # mongodb-memory-server descarga ~780 MB la primera vez; la versión del
+      # binario depende del lock del backend.
+      - name: Caché del binario de MongoDB
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/mongodb-binaries
+          key: mongodb-binaries-${{ runner.os }}-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: mongodb-binaries-${{ runner.os }}-
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+  frontend:
+    name: frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      # Playwright lanza Chromium sin sandbox por defecto (válido en Linux del CI).
+      - name: Instalar Chromium para las pruebas
+        run: npx playwright install --with-deps chromium
+
+      - name: Pruebas en Chromium headless
+        run: npm run test:ci
+
+      - name: Build de producción para GitHub Pages
+        run: npx ng build --base-href /pedidos-utmach/
+
+      # GitHub Pages sirve 404.html en rutas desconocidas: así Angular resuelve
+      # las rutas del router al recargar o abrir un enlace directo.
+      - name: Copiar index.html a 404.html
+        run: cp dist/pedidos-utmach/browser/index.html dist/pedidos-utmach/browser/404.html
+
+      - name: Subir el artefacto de Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: frontend/dist/pedidos-utmach/browser
+
+  deploy:
+    name: deploy
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - name: Publicar en GitHub Pages
+        id: despliegue
+        uses: actions/deploy-pages@v4
