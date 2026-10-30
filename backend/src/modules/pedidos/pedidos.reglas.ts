@@ -28,3 +28,53 @@ export function calcularTotales<T extends LineaConPrecio>(items: T[]): TotalesPe
 
   return { items: conSubtotal, total };
 }
+
+export type ResultadoValidacion = { valido: true } | { valido: false; mensaje: string };
+
+export const ZONA_HORARIA = "America/Guayaquil";
+const APERTURA_SEGUNDOS = 7 * 3600;
+const CIERRE_SEGUNDOS = 16 * 3600;
+
+const formatoHoraEcuador = new Intl.DateTimeFormat("en-US", {
+  timeZone: ZONA_HORARIA,
+  hourCycle: "h23",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit"
+});
+
+/** Segundos transcurridos desde la medianoche en la hora de Ecuador. */
+function segundosDelDiaEnEcuador(fecha: Date): number {
+  const partes = formatoHoraEcuador.formatToParts(fecha);
+  const valor = (tipo: Intl.DateTimeFormatPartTypes) =>
+    Number(partes.find((parte) => parte.type === tipo)?.value ?? 0);
+
+  return valor("hour") * 3600 + valor("minute") * 60 + valor("second");
+}
+
+/**
+ * La hora de recogida debe ser posterior a `ahora` y estar entre las 07:00
+ * y las 16:00 (inclusive) en la zona `America/Guayaquil`.
+ */
+export function validarHoraRecogida(fecha: Date, ahora: Date): ResultadoValidacion {
+  if (Number.isNaN(fecha.getTime())) {
+    return { valido: false, mensaje: "La hora de recogida no es válida" };
+  }
+
+  if (fecha.getTime() <= ahora.getTime()) {
+    return {
+      valido: false,
+      mensaje: "La hora de recogida debe ser posterior a la hora actual"
+    };
+  }
+
+  const segundos = segundosDelDiaEnEcuador(fecha);
+  if (segundos < APERTURA_SEGUNDOS || segundos > CIERRE_SEGUNDOS) {
+    return {
+      valido: false,
+      mensaje: "La hora de recogida debe estar entre las 07:00 y las 16:00"
+    };
+  }
+
+  return { valido: true };
+}
