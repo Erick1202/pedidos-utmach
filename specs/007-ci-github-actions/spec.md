@@ -41,7 +41,7 @@ Como presentador, quiero abrir la app publicada y que consuma la API que corre e
 
 **Dado** Node 22 con caché de npm basada en `frontend/package-lock.json`,
 **cuando** corre el job `frontend`,
-**entonces** ejecuta `npm ci`, `ng test --watch=false` en ChromeHeadless y `ng build --base-href /pedidos-utmach/`, y copia `index.html` a `404.html` en la carpeta de salida.
+**entonces** ejecuta `npm ci`, `ng test --watch=false` en Chrome headless (`--browsers=ChromiumHeadless`) y `ng build --base-href /pedidos-utmach/`, y copia `index.html` a `404.html` en la carpeta de salida.
 
 ### CA-04 — Artefacto de Pages
 
