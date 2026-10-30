@@ -35,6 +35,13 @@
 
 ## E. Verificación y cierre
 
-- [ ] Lint, pruebas y build del backend; pruebas y build del frontend (CA-14).
-- [ ] Prueba real con el administrador: avanzar un pedido y verificar `historialEstados` con el driver (CA-14).
-- [ ] Actualizar `README.md`, `specs/README.md` y `docs/`.
+- [x] Lint, pruebas y build del backend; pruebas y build del frontend (CA-14).
+- [x] Prueba real con el administrador: avanzar un pedido y verificar `historialEstados` con el driver (CA-14).
+- [x] Actualizar `README.md`, `specs/README.md` y `docs/`.
+
+## Resultados de la verificación
+
+- Ciclo TDD en el historial: `test:` (rojo, 7 pruebas fallan porque `siguienteEstado` no existe) → `feat:` (verde, 25/25) → `refactor:` (tipo `EstadoPedido` derivado de `ESTADOS_PEDIDO`).
+- Backend: `npm run lint` sin advertencias, `npm test` **9 archivos / 144 pruebas** en verde (22 nuevas de integración en `pedidos.estado.test.ts`, con `explain` que confirma `ix_usuario_fecha` e `ix_estado_hora`, y la carrera de dos `PATCH` resuelta como `[200, 409]` de forma determinista) y `npm run build` sin errores.
+- Frontend: `npm run build` sin errores y `npm test -- --watch=false` **11 archivos / 48 pruebas** en verde.
+- Base real (API en un puerto alterno): el administrador vio los 3 pedidos activos ordenados por hora de recogida (María Castillo «preparando», Carlos Pineda «recibido» y el pedido de Ana Torres de la fase 4). `PATCH` sobre el pedido `64f000000000000000000014` lo pasó a «preparando»; con el driver, `historialEstados` creció de **1 a 2** con `fecha` de tipo `Date` y `pedidos` siguió en 41. Id inválido → 400, inexistente → 404, pedido entregado → 409 y estudiante en `/activos` → 403.

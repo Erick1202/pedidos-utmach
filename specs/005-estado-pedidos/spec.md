@@ -2,7 +2,7 @@
 
 **Issue:** #6
 **Rama:** `005-estado-pedidos`
-**Estado:** en desarrollo
+**Estado:** completada
 **Depende de:** fase 4 (`004-carrito-pedido`) y de los índices `ix_usuario_fecha` e `ix_estado_hora` de la colección `pedidos`.
 
 ## Contexto

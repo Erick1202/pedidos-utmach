@@ -177,7 +177,7 @@ Todas las rutas usan el prefijo `/api` y responden JSON.
 | Pedidos (admin) | `GET /pedidos/activos`, `PATCH /pedidos/:id/estado` | Admin |
 | Reportes | `GET /reportes/mas-vendidos`, `/ventas-por-dia`, `/hora-pico`, `/ventas-por-categoria`, `/resumen` | Admin |
 
-El detalle de cada endpoint se documenta en [`specs/`](specs/) y en las pruebas del backend. Hasta la fase 4 están implementados **Salud**, **Autenticación**, **Categorías**, **Productos** y la creación de pedidos `POST /pedidos` (contrato en [`specs/004-carrito-pedido/plan.md`](specs/004-carrito-pedido/plan.md)); `GET /pedidos/mios`, las rutas de administración de pedidos y los reportes se agregan en las fases 5 y 6.
+El detalle de cada endpoint se documenta en [`specs/`](specs/) y en las pruebas del backend. Hasta la fase 5 están implementados **Salud**, **Autenticación**, **Categorías**, **Productos** y **Pedidos**: creación (contrato en [`specs/004-carrito-pedido/plan.md`](specs/004-carrito-pedido/plan.md)), `GET /pedidos/mios?limite`, `GET /pedidos/activos?fecha=AAAA-MM-DD` y `PATCH /pedidos/:id/estado` (contrato en [`specs/005-estado-pedidos/plan.md`](specs/005-estado-pedidos/plan.md)). Los reportes se agregan en la fase 6.
 
 ## Pruebas
 
@@ -247,7 +247,7 @@ npm test
 | 2 · Autenticación y guards | `002-autenticacion` | ✅ Completada |
 | 3 · Menú, productos y admin | `003-menu-productos` | ✅ Completada |
 | 4 · Carrito y pedido | `004-carrito-pedido` | ✅ Completada |
-| 5 · Estados de pedidos | `005-estado-pedidos` | ⏳ Pendiente |
+| 5 · Estados de pedidos | `005-estado-pedidos` | ✅ Completada |
 | 6 · Reportes | `006-reportes` | ⏳ Pendiente |
 | 7 · CI y despliegue | `ci/github-actions` | ⏳ Pendiente |
 
