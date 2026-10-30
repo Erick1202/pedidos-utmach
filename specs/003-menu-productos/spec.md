@@ -2,7 +2,7 @@
 
 **Issue:** #4
 **Rama:** `003-menu-productos`
-**Estado:** en progreso
+**Estado:** completada
 **Depende de:** fase 2 (`002-autenticacion`) y de las 4 categorías y 12 productos ya cargados en `pedidos_utmach`.
 
 ## Contexto

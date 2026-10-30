@@ -53,7 +53,14 @@
 
 ## G. Verificación y cierre
 
-- [ ] `npm run build --prefix frontend` y `npm test --prefix frontend -- --watch=false` en verde.
-- [ ] Verificar contra la base real: 11 productos disponibles y `q=verde` → Bolón de verde y Chifles.
-- [ ] Actualizar `README.md`, `specs/README.md` y la documentación de la API.
-- [ ] Commits en Conventional Commits y rama lista para el PR que cierra el Issue #4.
+- [x] `npm run build --prefix frontend` y `npm test --prefix frontend -- --watch=false` en verde.
+- [x] Verificar contra la base real: 11 productos disponibles y `q=verde` → Bolón de verde y Chifles.
+- [x] Actualizar `README.md`, `specs/README.md` y la documentación de la API.
+- [x] Commits en Conventional Commits y rama lista para el PR que cierra el Issue #4.
+
+## Resultados de la verificación
+
+- Backend: `npm run lint` sin advertencias, `npm test` **6 archivos / 81 pruebas** en verde y `npm run build` sin errores.
+- Frontend: `npm run build` sin errores y `npm test -- --watch=false` **6 archivos / 24 pruebas** en verde.
+- Base real (solo lecturas): `GET /api/productos` → 11 productos sin Tigrillo; `?q=verde` → Bolón de verde y Chifles; `?todos=true` → 401 sin token y 12 productos como admin; `DELETE` como estudiante → 403.
+- Navegador a 375 px: menú con 11 tarjetas, búsqueda con debounce, precios `$1,50` y sin desplazamiento horizontal; `/admin/productos` con switches de disponibilidad.

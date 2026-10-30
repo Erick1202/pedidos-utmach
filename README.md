@@ -171,13 +171,13 @@ Todas las rutas usan el prefijo `/api` y responden JSON.
 | Autenticación | `POST /auth/registro`, `POST /auth/login`, `GET /auth/perfil` | Público / autenticado |
 | Categorías | `GET /categorias` | Público |
 | Categorías (admin) | `POST /categorias`, `PUT /categorias/:id`, `DELETE /categorias/:id` | Admin |
-| Productos | `GET /productos?categoria=&q=`, `GET /productos/:id` | Público |
+| Productos | `GET /productos?categoria=&q=`, `GET /productos/:id` (`?todos=true` solo admin) | Público |
 | Productos (admin) | `POST /productos`, `PUT /productos/:id`, `PATCH /productos/:id/disponible`, `DELETE /productos/:id` | Admin |
 | Pedidos | `POST /pedidos`, `GET /pedidos/mios` | Estudiante |
 | Pedidos (admin) | `GET /pedidos/activos`, `PATCH /pedidos/:id/estado` | Admin |
 | Reportes | `GET /reportes/mas-vendidos`, `/ventas-por-dia`, `/hora-pico`, `/ventas-por-categoria`, `/resumen` | Admin |
 
-El detalle de cada endpoint se documenta en [`specs/`](specs/) y en las pruebas del backend. En la fase 2 están implementados **Salud** y **Autenticación**; las rutas de categorías, productos, pedidos y reportes se agregan en las fases 3 a 6.
+El detalle de cada endpoint se documenta en [`specs/`](specs/) y en las pruebas del backend. Hasta la fase 3 están implementados **Salud**, **Autenticación**, **Categorías** y **Productos** (contratos en [`specs/003-menu-productos/plan.md`](specs/003-menu-productos/plan.md)); las rutas de pedidos y reportes se agregan en las fases 4 a 6.
 
 ## Pruebas
 
@@ -245,7 +245,7 @@ npm test
 | 0 · Estructura del monorepo | `chore/estructura` | ✅ Completada |
 | 1 · Backend base y documentación del modelo | `001-backend-base` | ✅ Completada |
 | 2 · Autenticación y guards | `002-autenticacion` | ✅ Completada |
-| 3 · Menú, productos y admin | `003-menu-productos` | ⏳ Pendiente |
+| 3 · Menú, productos y admin | `003-menu-productos` | ✅ Completada |
 | 4 · Carrito y pedido | `004-carrito-pedido` | ⏳ Pendiente |
 | 5 · Estados de pedidos | `005-estado-pedidos` | ⏳ Pendiente |
 | 6 · Reportes | `006-reportes` | ⏳ Pendiente |
