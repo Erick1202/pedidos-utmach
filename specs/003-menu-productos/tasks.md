@@ -22,13 +22,13 @@
 
 ## C. Backend — productos
 
-- [ ] `GET /api/productos` con solo disponibles, filtro por categoría y `$text` ordenado por `textScore` (CA-06, CA-07, CA-08).
-- [ ] `?todos=true` solo para admin (CA-09).
-- [ ] `GET /api/productos/:id` (CA-10).
-- [ ] `POST` y `PUT` con categoría embebida desde la BD y precio redondeado (CA-11).
-- [ ] `PATCH /api/productos/:id/disponible` (CA-12).
-- [ ] `DELETE /api/productos/:id` (CA-13).
-- [ ] Montar las rutas en `crearApp` con `autenticar` + `autorizarPorRol("admin")` (CA-14).
+- [x] `GET /api/productos` con solo disponibles, filtro por categoría y `$text` ordenado por `textScore` (CA-06, CA-07, CA-08).
+- [x] `?todos=true` solo para admin (CA-09).
+- [x] `GET /api/productos/:id` (CA-10).
+- [x] `POST` y `PUT` con categoría embebida desde la BD y precio redondeado (CA-11).
+- [x] `PATCH /api/productos/:id/disponible` (CA-12).
+- [x] `DELETE /api/productos/:id` (CA-13).
+- [x] Montar las rutas en `crearApp` con `autenticar` + `autorizarPorRol("admin")` (CA-14).
 
 ## D. Backend — pruebas
 
