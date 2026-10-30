@@ -2,6 +2,7 @@
 
 **Issue:** #2
 **Rama:** `001-backend-base`
+**Estado:** ✅ Completada
 
 > Convención: `[x]` completado, `[ ]` pendiente. Cada tarea se marca en el commit que la completa.
 
@@ -19,47 +20,57 @@
 
 ## B. Andamiaje del backend
 
-- [ ] Crear `backend/package.json` con scripts `dev`, `build`, `start`, `lint`, `test`.
-- [ ] Configurar TypeScript estricto (`tsconfig.json` y `tsconfig.build.json`).
-- [ ] Configurar ESLint 9 con typescript-eslint y `--max-warnings 0`.
-- [ ] Configurar Vitest (entorno Node, sin paralelismo entre archivos).
-- [ ] Crear `backend/.env.example` y `backend/.env` local (ignorado por Git).
-- [ ] Validar variables de entorno con zod y mensajes en español.
+- [x] Crear `backend/package.json` con scripts `dev`, `build`, `start`, `lint`, `test`.
+- [x] Configurar TypeScript estricto (`tsconfig.json` y `tsconfig.build.json`).
+- [x] Configurar ESLint con typescript-eslint y `--max-warnings 0`.
+- [x] Configurar Vitest (entorno Node, sin paralelismo entre archivos).
+- [x] Crear `backend/.env.example` y `backend/.env` local (ignorado por Git).
+- [x] Validar variables de entorno con zod y mensajes en español.
 
 ## C. Conexión a MongoDB
 
-- [ ] Implementar `conectarBaseDeDatos` con `ping` y `serverSelectionTimeoutMS`.
-- [ ] Implementar `contarDocumentos` para las cuatro colecciones.
-- [ ] Registrar en el arranque la base conectada y los conteos.
-- [ ] Implementar apagado ordenado (SIGINT/SIGTERM) cerrando cliente y servidor.
-- [ ] Crear `GET /api/salud` con conteos reales.
+- [x] Implementar `conectarBaseDeDatos` con `ping` y `serverSelectionTimeoutMS`.
+- [x] Implementar `contarDocumentos` para las cuatro colecciones.
+- [x] Registrar en el arranque la base conectada y los conteos.
+- [x] Implementar apagado ordenado (SIGINT/SIGTERM) cerrando cliente y servidor.
+- [x] Crear `GET /api/salud` con conteos reales.
 
 ## D. Manejo de errores
 
-- [ ] Crear `ErrorAplicacion` con código HTTP y mensaje.
-- [ ] Implementar `traducirError` (zod, 121, 11000, JSON inválido, desconocido).
-- [ ] Implementar middleware 404 en JSON.
-- [ ] Implementar middleware central de errores sin filtrar trazas.
-- [ ] Configurar CORS para `http://localhost:4200`.
-- [ ] Configurar `express.json` con límite y `x-powered-by` desactivado.
+- [x] Crear `ErrorAplicacion` con código HTTP y mensaje.
+- [x] Implementar `traducirError` (zod, 121, 11000, JSON inválido, desconocido).
+- [x] Implementar middleware 404 en JSON.
+- [x] Implementar middleware central de errores sin filtrar trazas.
+- [x] Configurar CORS para `http://localhost:4200`.
+- [x] Configurar `express.json` con límite y `x-powered-by` desactivado.
 
 ## E. Pruebas
 
-- [ ] Crear helper `tests/helpers/base.ts` con `mongodb-memory-server`.
-- [ ] Copiar validadores `$jsonSchema` e índices exactos en `tests/helpers/esquema.ts`.
-- [ ] Insertar fixtures mínimos con `_id` deterministas y hashes reales.
-- [ ] Probar `GET /api/salud` (200 + conteos).
-- [ ] Probar 404, `ErrorAplicacion`, zod, 121, 11000 y JSON malformado.
-- [ ] Probar que el validador rechaza cantidad 0 y precio negativo.
-- [ ] Probar que `ux_email` impide correos duplicados.
-- [ ] Verificar que la suite no usa `127.0.0.1:27017`.
+- [x] Crear helper `tests/helpers/base.ts` con `mongodb-memory-server`.
+- [x] Copiar validadores `$jsonSchema` e índices exactos en `tests/helpers/esquema.ts`.
+- [x] Insertar fixtures mínimos con `_id` deterministas y hashes reales.
+- [x] Probar `GET /api/salud` (200 + conteos).
+- [x] Probar 404, `ErrorAplicacion`, zod, 121, 11000 y JSON malformado.
+- [x] Probar que el validador rechaza cantidad 0 y precio negativo.
+- [x] Probar que `ux_email` impide correos duplicados.
+- [x] Verificar que la suite no usa `127.0.0.1:27017`.
 
 ## F. Verificación y cierre
 
-- [ ] `npm run lint` sin errores ni advertencias.
-- [ ] `npm test` en verde.
-- [ ] `npm run build` sin errores.
-- [ ] Arrancar contra la base real y confirmar conteos 6/4/12/40.
-- [ ] Revisar que no se modificó la base (solo lecturas).
-- [ ] Actualizar el estado de la fase en `README.md` y `specs/README.md`.
-- [ ] Commits en Conventional Commits y rama lista para el PR que cierra el Issue #2.
+- [x] `npm run lint` sin errores ni advertencias.
+- [x] `npm test` en verde (14 pruebas, 3 archivos).
+- [x] `npm run build` sin errores.
+- [x] Arrancar contra la base real y confirmar conteos 6/4/12/40.
+- [x] Revisar que no se modificó la base (solo lecturas).
+- [x] Actualizar el estado de la fase en `README.md` y `specs/README.md`.
+- [x] Commits en Conventional Commits y rama lista para el PR que cierra el Issue #2.
+
+## Resultado de la verificación
+
+| Comprobación | Resultado |
+| --- | --- |
+| `npm run lint` | Sin errores ni advertencias. |
+| `npm test` | 3 archivos, 14 pruebas en verde. |
+| `npm run build` | Compila sin errores en `dist/`. |
+| `GET /api/salud` contra la base real | 200 con `usuarios: 6`, `categorias: 4`, `productos: 12`, `pedidos: 40`. |
+| Base local | Solo `ping` y `countDocuments`; no se creó ni modificó nada. |

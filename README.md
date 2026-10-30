@@ -195,6 +195,8 @@ npm test
 ```
 
 > Las pruebas del backend levantan una instancia efímera de MongoDB en memoria con los mismos validadores e índices de `database/pedidos_utmach.js`. La base `pedidos_utmach` de tu máquina no se lee ni se modifica durante las pruebas.
+>
+> Mientras el frontend todavía no exista (fases iniciales), usa `npm run test:backend`. Cuando esté creado, `npm test` ejecutará ambas suites.
 
 ## Flujo de trabajo Git (GitHub Flow + SDD)
 
@@ -245,7 +247,7 @@ npm test
 | Fase | Rama | Estado |
 | --- | --- | --- |
 | 0 · Estructura del monorepo | `chore/estructura` | ✅ Completada |
-| 1 · Backend base y documentación del modelo | `001-backend-base` | 🟡 En curso |
+| 1 · Backend base y documentación del modelo | `001-backend-base` | ✅ Completada |
 | 2 · Autenticación y guards | `002-autenticacion` | ⏳ Pendiente |
 | 3 · Menú, productos y admin | `003-menu-productos` | ⏳ Pendiente |
 | 4 · Carrito y pedido | `004-carrito-pedido` | ⏳ Pendiente |

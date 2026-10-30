@@ -32,7 +32,7 @@ specs/00X-nombre/
 | Carpeta | Fase / rama | Funcionalidad | Estado |
 | --- | --- | --- | --- |
 | — | `chore/estructura` | Estructura del monorepo, README y constitución | ✅ Completada |
-| [`001-backend-base/`](001-backend-base/) | `001-backend-base` | Backend base, conexión a la base existente, errores y helper de pruebas | 🟡 En curso |
+| [`001-backend-base/`](001-backend-base/) | `001-backend-base` | Backend base, conexión a la base existente, errores y helper de pruebas | ✅ Completada |
 | `002-autenticacion/` | `002-autenticacion` | Registro, login, JWT y guards por rol | ⏳ Pendiente |
 | `003-menu-productos/` | `003-menu-productos` | Catálogo, filtros, búsqueda de texto y CRUD admin | ⏳ Pendiente |
 | `004-carrito-pedido/` | `004-carrito-pedido` | Carrito, hora de recogida y creación del pedido (TDD) | ⏳ Pendiente |
