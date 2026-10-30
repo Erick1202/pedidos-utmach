@@ -4,6 +4,7 @@ import type { Db } from "mongodb";
 import { manejadorErrores } from "./middleware/errores.js";
 import { noEncontrado } from "./middleware/no-encontrado.js";
 import { crearRutasAuth } from "./modules/auth/auth.routes.js";
+import { crearRutasPedidos } from "./modules/pedidos/pedidos.routes.js";
 import { crearRutasCategorias } from "./modules/categorias/categorias.routes.js";
 import { crearRutasProductos } from "./modules/productos/productos.routes.js";
 import { crearRutasSalud } from "./modules/salud/salud.routes.js";
@@ -12,11 +13,13 @@ export const ORIGEN_PERMITIDO = "http://localhost:4200";
 
 export interface OpcionesApp {
   jwtSecret: string;
+  /** Reloj inyectable para que las pruebas de pedidos sean deterministas. */
+  ahora?: () => Date;
 }
 
 /**
- * Fábrica de la aplicación. Recibe la base ya conectada y el secreto JWT
- * para que las pruebas puedan inyectar ambos sin leer `.env`.
+ * Fábrica de la aplicación. Recibe la base ya conectada, el secreto JWT y,
+ * opcionalmente, el reloj, para que las pruebas los inyecten sin leer `.env`.
  */
 export function crearApp(db: Db, opciones: OpcionesApp): Express {
   const app = express();
@@ -35,6 +38,10 @@ export function crearApp(db: Db, opciones: OpcionesApp): Express {
   app.use("/api/auth", crearRutasAuth(db, opciones.jwtSecret));
   app.use("/api/categorias", crearRutasCategorias(db, opciones.jwtSecret));
   app.use("/api/productos", crearRutasProductos(db, opciones.jwtSecret));
+  app.use(
+    "/api/pedidos",
+    crearRutasPedidos(db, opciones.jwtSecret, opciones.ahora ?? (() => new Date()))
+  );
 
   app.use(noEncontrado);
   app.use(manejadorErrores);
