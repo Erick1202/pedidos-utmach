@@ -25,10 +25,10 @@
 
 ## D. Pipeline
 
-- [ ] `.github/workflows/ci.yml` con disparadores y concurrencia (CA-01).
-- [ ] Job `backend` con caché de npm y de binarios de MongoDB (CA-02).
-- [ ] Job `frontend` con pruebas en ChromeHeadless, build, `404.html` y artefacto (CA-03, CA-04).
-- [ ] Job `deploy` con GitHub Pages (CA-05, CA-06).
+- [x] `.github/workflows/ci.yml` con disparadores y concurrencia (CA-01).
+- [x] Job `backend` con caché de npm y de binarios de MongoDB (CA-02).
+- [x] Job `frontend` con pruebas en ChromeHeadless, build, `404.html` y artefacto (CA-03, CA-04).
+- [x] Job `deploy` con GitHub Pages (CA-05, CA-06).
 
 ## E. Documentación y cierre
 
