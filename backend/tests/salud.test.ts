@@ -29,7 +29,7 @@ describe("GET /api/salud", () => {
       baseDatos: "pedidos_utmach",
       colecciones: {
         usuarios: 2,
-        categorias: 2,
+        categorias: 3,
         productos: 3,
         pedidos: 1
       }

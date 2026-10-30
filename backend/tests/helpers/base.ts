@@ -11,6 +11,7 @@ export const IDS = {
   estudiante: new ObjectId("64a100000000000000000001"),
   categoriaDesayunos: new ObjectId("64c000000000000000000001"),
   categoriaAlmuerzos: new ObjectId("64c000000000000000000002"),
+  categoriaBebidas: new ObjectId("64c000000000000000000003"),
   bolon: new ObjectId("64d000000000000000000001"),
   tigrillo: new ObjectId("64d000000000000000000003"),
   almuerzo: new ObjectId("64d000000000000000000004"),
@@ -67,7 +68,7 @@ export async function crearEntornoPruebas(
   };
 }
 
-/** Datos mínimos: 2 usuarios, 2 categorías, 3 productos y 1 pedido. */
+/** Datos mínimos: 2 usuarios, 3 categorías (Bebidas sin productos), 3 productos y 1 pedido. */
 export async function insertarDatosMinimos(db: Db): Promise<void> {
   await db.collection("usuarios").insertMany([
     {
@@ -98,6 +99,11 @@ export async function insertarDatosMinimos(db: Db): Promise<void> {
       _id: IDS.categoriaAlmuerzos,
       nombre: "Almuerzos",
       slug: "almuerzos"
+    },
+    {
+      _id: IDS.categoriaBebidas,
+      nombre: "Bebidas",
+      slug: "bebidas"
     }
   ]);
 

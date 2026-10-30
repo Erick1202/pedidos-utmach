@@ -32,11 +32,11 @@
 
 ## D. Backend — pruebas
 
-- [ ] Ampliar el helper con la categoría `Bebidas`.
-- [ ] Probar categorías: listado, slug, duplicado, renombrado con `updateMany`, borrado con y sin productos.
-- [ ] Probar productos: filtros, `$text`, `todos`, detalle, CRUD y validaciones.
-- [ ] Probar permisos: estudiante `403` y sin token `401` en el CRUD.
-- [ ] Ejecutar lint, pruebas y build del backend (CA-18).
+- [x] Ampliar el helper con la categoría `Bebidas`.
+- [x] Probar categorías: listado, slug, duplicado, renombrado con `updateMany`, borrado con y sin productos.
+- [x] Probar productos: filtros, `$text`, `todos`, detalle, CRUD y validaciones.
+- [x] Probar permisos: estudiante `403` y sin token `401` en el CRUD.
+- [x] Ejecutar lint, pruebas y build del backend (CA-18).
 
 ## E. Frontend — catálogo
 
