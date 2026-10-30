@@ -18,7 +18,7 @@
 - [x] `test:` prueba en rojo de `validarHoraRecogida` (CA-02).
 - [x] `feat:` implementar `validarHoraRecogida` con `America/Guayaquil` (CA-02).
 - [x] `test:` prueba en rojo de `validarCantidades` (CA-03).
-- [ ] `feat:` implementar `validarCantidades` (CA-03).
+- [x] `feat:` implementar `validarCantidades` (CA-03).
 
 ## C. Backend — endpoint
 

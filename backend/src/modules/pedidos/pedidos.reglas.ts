@@ -78,3 +78,27 @@ export function validarHoraRecogida(fecha: Date, ahora: Date): ResultadoValidaci
 
   return { valido: true };
 }
+
+export const CANTIDAD_MINIMA = 1;
+export const CANTIDAD_MAXIMA = 20;
+
+/** Al menos una línea y cada cantidad entera entre 1 y 20. */
+export function validarCantidades(items: Array<{ cantidad: number }>): ResultadoValidacion {
+  if (items.length === 0) {
+    return { valido: false, mensaje: "El pedido debe tener al menos un producto" };
+  }
+
+  const cantidadInvalida = items.some(
+    ({ cantidad }) =>
+      !Number.isInteger(cantidad) || cantidad < CANTIDAD_MINIMA || cantidad > CANTIDAD_MAXIMA
+  );
+
+  if (cantidadInvalida) {
+    return {
+      valido: false,
+      mensaje: "La cantidad de cada producto debe ser un entero entre 1 y 20"
+    };
+  }
+
+  return { valido: true };
+}
