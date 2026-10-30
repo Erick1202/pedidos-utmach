@@ -1,0 +1,132 @@
+<section class="mx-auto max-w-2xl space-y-6">
+  <header>
+    <a routerLink="/admin" class="text-xs font-bold text-utmach-azul-claro hover:underline"
+      >← Administración</a
+    >
+    <h1 class="mt-1 text-2xl font-black tracking-tight text-slate-900">Categorías</h1>
+    <p class="text-sm text-slate-500">
+      Al renombrar una categoría se actualiza también en todos sus productos.
+    </p>
+  </header>
+
+  <form
+    (ngSubmit)="crear()"
+    novalidate
+    class="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm sm:p-5"
+  >
+    <label for="nueva-categoria" class="block text-sm font-semibold text-slate-700"
+      >Nueva categoría</label
+    >
+    <div class="mt-1 flex flex-col gap-2 sm:flex-row">
+      <input
+        id="nueva-categoria"
+        type="text"
+        placeholder="Ej.: Postres"
+        [formControl]="nuevoNombre"
+        [attr.aria-invalid]="nuevoNombre.invalid && nuevoNombre.touched"
+        class="w-full min-w-0 rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-utmach-azul-claro focus:outline-none focus:ring-4 focus:ring-utmach-azul-claro/20"
+      />
+      <button
+        type="submit"
+        [disabled]="ocupado()"
+        class="shrink-0 rounded-xl bg-utmach-azul px-5 py-2.5 text-sm font-bold text-white hover:bg-utmach-azul-oscuro disabled:opacity-60"
+      >
+        Agregar
+      </button>
+    </div>
+    @if (nuevoNombre.invalid && nuevoNombre.touched) {
+      <p class="mt-1 text-xs text-red-600">El nombre debe tener entre 3 y 50 caracteres.</p>
+    }
+  </form>
+
+  @if (error()) {
+    <p class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+      {{ error() }}
+    </p>
+  }
+  @if (aviso()) {
+    <p
+      class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+      role="status"
+    >
+      {{ aviso() }}
+    </p>
+  }
+
+  @if (cargando()) {
+    <p class="py-8 text-center text-sm text-slate-500" aria-busy="true">Cargando categorías…</p>
+  } @else if (categorias().length === 0) {
+    <p
+      class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-10 text-center text-sm text-slate-500"
+    >
+      No hay categorías todavía.
+    </p>
+  } @else {
+    <ul class="divide-y divide-slate-100 rounded-2xl border border-slate-200 bg-white shadow-sm">
+      @for (categoria of categorias(); track categoria._id) {
+        <li class="p-4">
+          @if (editandoId() === categoria._id) {
+            <form
+              (ngSubmit)="guardarEdicion(categoria)"
+              novalidate
+              class="flex flex-col gap-2 sm:flex-row sm:items-start"
+            >
+              <label [for]="'editar-' + categoria._id" class="sr-only">Nuevo nombre</label>
+              <div class="min-w-0 flex-1">
+                <input
+                  [id]="'editar-' + categoria._id"
+                  type="text"
+                  [formControl]="nombreEditado"
+                  class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-utmach-azul-claro focus:outline-none focus:ring-4 focus:ring-utmach-azul-claro/20"
+                />
+                @if (nombreEditado.invalid && nombreEditado.touched) {
+                  <p class="mt-1 text-xs text-red-600">Entre 3 y 50 caracteres.</p>
+                }
+              </div>
+              <div class="flex gap-2">
+                <button
+                  type="submit"
+                  [disabled]="ocupado()"
+                  class="rounded-lg bg-utmach-azul px-4 py-2 text-xs font-bold text-white hover:bg-utmach-azul-oscuro disabled:opacity-60"
+                >
+                  Guardar
+                </button>
+                <button
+                  type="button"
+                  (click)="cancelarEdicion()"
+                  class="rounded-lg border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          } @else {
+            <div class="flex items-center justify-between gap-3">
+              <div class="min-w-0">
+                <p class="truncate font-bold text-slate-900">{{ categoria.nombre }}</p>
+                <p class="text-xs text-slate-400">/{{ categoria.slug }}</p>
+              </div>
+              <div class="flex shrink-0 gap-1">
+                <button
+                  type="button"
+                  (click)="editar(categoria)"
+                  class="rounded-lg px-3 py-1.5 text-xs font-bold text-utmach-azul hover:bg-blue-50"
+                >
+                  Editar
+                </button>
+                <button
+                  type="button"
+                  (click)="eliminar(categoria)"
+                  [disabled]="ocupado()"
+                  class="rounded-lg px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 disabled:opacity-50"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  }
+</section>

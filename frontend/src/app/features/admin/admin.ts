@@ -1,8 +1,10 @@
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-admin',
+  imports: [RouterLink],
   template: `
     <section class="space-y-6">
       <div
@@ -17,28 +19,43 @@ import { AuthService } from '../../core/auth/auth.service';
             Panel del administrador
           </h1>
           <p class="mt-2 max-w-xl text-sm leading-relaxed text-blue-100">
-            Bienvenido, {{ usuario()?.nombre }}. Solo los administradores pueden ver esta sección.
+            Bienvenido, {{ usuario()?.nombre }}. Desde aquí administras el menú del bar.
           </p>
         </div>
       </div>
 
-      <div class="grid gap-4 sm:grid-cols-2">
-        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p class="text-xs font-bold uppercase tracking-wide text-utmach-azul-claro">
-            Próximamente
-          </p>
-          <h2 class="mt-2 text-lg font-bold text-slate-900">Gestión de pedidos</h2>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <a
+          routerLink="/admin/productos"
+          class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-utmach-azul-claro hover:shadow-md focus:outline-none focus-visible:ring-4 focus-visible:ring-utmach-azul-claro/30"
+        >
+          <p class="text-xs font-bold uppercase tracking-wide text-utmach-azul-claro">Catálogo</p>
+          <h2 class="mt-2 text-lg font-bold text-slate-900 group-hover:text-utmach-azul">
+            Productos →
+          </h2>
           <p class="mt-2 text-sm leading-relaxed text-slate-500">
-            Aquí podrás recibir pedidos, actualizar su estado y consultar los reportes del bar.
+            Crea y edita productos, cambia precios y marca su disponibilidad.
           </p>
-        </article>
+        </a>
 
-        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p class="text-xs font-bold uppercase tracking-wide text-utmach-azul-claro">Seguridad</p>
-          <h2 class="mt-2 text-lg font-bold text-slate-900">Acceso verificado</h2>
+        <a
+          routerLink="/admin/categorias"
+          class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-utmach-azul-claro hover:shadow-md focus:outline-none focus-visible:ring-4 focus-visible:ring-utmach-azul-claro/30"
+        >
+          <p class="text-xs font-bold uppercase tracking-wide text-utmach-azul-claro">Catálogo</p>
+          <h2 class="mt-2 text-lg font-bold text-slate-900 group-hover:text-utmach-azul">
+            Categorías →
+          </h2>
           <p class="mt-2 text-sm leading-relaxed text-slate-500">
-            Esta ruta está protegida por el guard de administrador. Un estudiante que intente
-            abrirla será redirigido al menú.
+            Organiza el menú en categorías; los cambios de nombre llegan a los productos.
+          </p>
+        </a>
+
+        <article class="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-5">
+          <p class="text-xs font-bold uppercase tracking-wide text-slate-400">Próximamente</p>
+          <h2 class="mt-2 text-lg font-bold text-slate-700">Gestión de pedidos</h2>
+          <p class="mt-2 text-sm leading-relaxed text-slate-500">
+            Recibe pedidos, actualiza su estado y consulta los reportes del bar.
           </p>
         </article>
       </div>
