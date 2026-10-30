@@ -7,13 +7,14 @@ import { crearRutasAuth } from "./modules/auth/auth.routes.js";
 import { crearRutasPedidos } from "./modules/pedidos/pedidos.routes.js";
 import { crearRutasCategorias } from "./modules/categorias/categorias.routes.js";
 import { crearRutasProductos } from "./modules/productos/productos.routes.js";
+import { crearRutasReportes } from "./modules/reportes/reportes.routes.js";
 import { crearRutasSalud } from "./modules/salud/salud.routes.js";
 
 export const ORIGEN_PERMITIDO = "http://localhost:4200";
 
 export interface OpcionesApp {
   jwtSecret: string;
-  /** Reloj inyectable para que las pruebas de pedidos sean deterministas. */
+  /** Reloj inyectable para que las pruebas de pedidos y reportes sean deterministas. */
   ahora?: () => Date;
 }
 
@@ -23,6 +24,7 @@ export interface OpcionesApp {
  */
 export function crearApp(db: Db, opciones: OpcionesApp): Express {
   const app = express();
+  const ahora = opciones.ahora ?? (() => new Date());
 
   app.disable("x-powered-by");
   app.use(
@@ -38,10 +40,8 @@ export function crearApp(db: Db, opciones: OpcionesApp): Express {
   app.use("/api/auth", crearRutasAuth(db, opciones.jwtSecret));
   app.use("/api/categorias", crearRutasCategorias(db, opciones.jwtSecret));
   app.use("/api/productos", crearRutasProductos(db, opciones.jwtSecret));
-  app.use(
-    "/api/pedidos",
-    crearRutasPedidos(db, opciones.jwtSecret, opciones.ahora ?? (() => new Date()))
-  );
+  app.use("/api/pedidos", crearRutasPedidos(db, opciones.jwtSecret, ahora));
+  app.use("/api/reportes", crearRutasReportes(db, opciones.jwtSecret, ahora));
 
   app.use(noEncontrado);
   app.use(manejadorErrores);
