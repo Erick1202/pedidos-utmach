@@ -1,7 +1,11 @@
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { crearApp } from "../src/app.js";
-import { crearEntornoPruebas, type EntornoPruebas } from "./helpers/base.js";
+import {
+  crearEntornoPruebas,
+  SECRETO_PRUEBAS,
+  type EntornoPruebas
+} from "./helpers/base.js";
 
 describe("GET /api/salud", () => {
   let entorno: EntornoPruebas;
@@ -9,7 +13,7 @@ describe("GET /api/salud", () => {
 
   beforeAll(async () => {
     entorno = await crearEntornoPruebas();
-    app = crearApp(entorno.db);
+    app = crearApp(entorno.db, { jwtSecret: SECRETO_PRUEBAS });
   });
 
   afterAll(async () => {
