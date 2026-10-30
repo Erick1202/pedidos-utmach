@@ -1,6 +1,6 @@
 import type { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import type { Observable } from 'rxjs';
 import { CategoriasService } from '../../../core/catalogo/categorias.service';
@@ -32,6 +32,13 @@ export class AdminCategorias {
     validators: validadoresNombre,
   });
   protected readonly editandoId = signal<string | null>(null);
+
+  /**
+   * `(ngSubmit)` solo existe con una directiva de formulario: sin `[formGroup]`
+   * el envío nativo recarga la página y nunca llega a `crear()` ni a `guardarEdicion()`.
+   */
+  protected readonly formularioNuevo = new FormGroup({ nombre: this.nuevoNombre });
+  protected readonly formularioEdicion = new FormGroup({ nombre: this.nombreEditado });
 
   constructor() {
     this.cargar();
