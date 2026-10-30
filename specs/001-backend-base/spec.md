@@ -91,11 +91,11 @@ Como equipo de desarrollo, necesito un helper de pruebas que levante MongoDB en 
 **cuando** se revisa `docs/modelo-datos.md`,
 **entonces** describe las cuatro colecciones, su validador e índices, incluye un diagrama Mermaid, justifica el embebido/referencia y compara el modelo con su equivalente relacional.
 
-### CA-12 — Documentación sin scripts inexistentes
+### CA-12 — Documentación coherente con la base existente
 
 **Dado** el README y la constitución,
 **cuando** se revisan,
-**entonces** no mencionan `db:setup`, `setup.ts` ni un seed propio; indican que la base se crea ejecutando `database/pedidos_utmach.js` en Studio 3T.
+**entonces** no mencionan scripts de creación o carga que no existan; indican que la base se crea ejecutando `database/pedidos_utmach.js` en Studio 3T.
 
 ## Reglas y restricciones
 
@@ -111,4 +111,4 @@ Como equipo de desarrollo, necesito un helper de pruebas que levante MongoDB en 
 - Endpoints de categorías, productos, pedidos y reportes (fases 3 a 6).
 - Frontend (fase 2 en adelante).
 - GitHub Actions y despliegue (fase 7).
-- Cualquier script de seed o de creación de la base.
+- Cualquier script propio de creación o carga de la base.

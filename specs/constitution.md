@@ -84,7 +84,7 @@ Esta constitución fija los principios no negociables. Cuando una decisión téc
    - Los **items del pedido se embeben** porque se leen siempre con el pedido, su número es acotado y necesitan un snapshot del precio al momento de la compra.
    - La **categoría se desnormaliza** dentro del producto (`{ _id, nombre }`) porque el menú se lee por categoría y el nombre cambia con muy baja frecuencia.
    - **Usuarios y productos se referencian** por `_id` (con el nombre copiado cuando la vista lo necesita) porque son entidades independientes, reutilizadas por muchos documentos y con ciclo de vida propio.
-3. La base `pedidos_utmach` **ya existe** y su fuente de verdad es `database/pedidos_utmach.js`, que contiene los validadores `$jsonSchema` con `validationLevel: "strict"` y los índices. El backend **no** crea, borra ni modifica colecciones, validadores ni índices, y no incluye scripts de seed ni de setup.
+3. La base `pedidos_utmach` **ya existe** y su fuente de verdad es `database/pedidos_utmach.js`, que contiene los validadores `$jsonSchema` con `validationLevel: "strict"` y los índices. El backend **no** crea, borra ni modifica colecciones, validadores ni índices, y no incluye scripts propios de creación o carga de datos.
 4. Los índices existentes (`ux_email`, `ux_slug`, `ix_categoria_disponible`, `tx_busqueda`, `ix_usuario_fecha`, `ix_estado_hora`) no se crean ni se alteran desde la aplicación. Cualquier cambio de esquema se hace en el script de la base y se replica en el helper de pruebas.
 5. Las agregaciones viven en la capa de servicio, reutilizan los pipelines de `database/consultas_pedidos_utmach.js`, comienzan por `$match` sobre campos indexados cuando sea posible y limitan el volumen de datos antes de agrupar.
 6. Fechas en UTC (`Date` de BSON); la interfaz y las reglas de negocio usan la zona `America/Guayaquil` (UTC-5). El día se delimita entre las 05:00Z y las 05:00Z siguientes.
@@ -107,7 +107,7 @@ Esta constitución fija los principios no negociables. Cuando una decisión téc
 2. Cada endpoint documenta método, ruta, rol requerido, cuerpo, respuesta y errores posibles.
 3. `docs/` es la fuente de verdad para el modelo de datos, las consultas, Studio 3T y el despliegue. Si el código cambia, los documentos se actualizan en el mismo PR.
 4. Los documentos usan Markdown, diagramas Mermaid cuando aporten y bloques de comandos copiables para **PowerShell**.
-5. Los scripts de `database/` son la fuente de verdad del esquema y de las consultas de referencia. No se modifican desde el backend ni se reemplazan por scripts de seed propios.
+5. Los scripts de `database/` son la fuente de verdad del esquema y de las consultas de referencia. No se modifican desde el backend ni se reemplazan por scripts propios de carga de datos.
 
 ## Artículo IX. Entorno y portabilidad
 
@@ -136,7 +136,7 @@ Esta constitución fija los principios no negociables. Cuando una decisión téc
 | Versión | Fecha | Cambio |
 | --- | --- | --- |
 | 1.0.0 | 2026-10-28 | Ratificación inicial. |
-| 1.1.0 | 2026-10-29 | La base `pedidos_utmach` ya existe: se eliminan `setup.ts` y el seed, se agrega `database/` como fuente de verdad, `bcryptjs` con coste 10, payload JWT `_id`/`nombre`/`rol`, helper de pruebas con validadores e índices reales y reglas de zona horaria. |
+| 1.1.0 | 2026-10-29 | La base `pedidos_utmach` ya existe: se retiran los scripts de creación de la base, se agrega `database/` como fuente de verdad, `bcryptjs` con coste 10, payload JWT `_id`/`nombre`/`rol`, helper de pruebas con validadores e índices reales y reglas de zona horaria. |
 - Las excepciones puntuales se documentan en el `plan.md` de la funcionalidad con su justificación y fecha; no modifican la constitución.
 - En caso de duda, se pregunta antes de asumir. Una decisión no documentada se considera deuda técnica.
 - La conformidad se verifica en cada Pull Request mediante la lista de comprobación del Artículo X.

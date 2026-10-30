@@ -166,7 +166,7 @@ No se usa TDD en esta fase porque no hay reglas de negocio; las pruebas se escri
 ## Alternativas descartadas
 
 - **Mongoose:** oculta las operaciones nativas que evalúa la materia de NoSQL.
-- **Seed o `setup.ts` propios:** la base ya existe y el usuario pidió no recrearla.
+- **Scripts propios de creación o carga de datos:** la base ya existe y su script versionado es la única fuente de verdad; el backend no la recrea.
 - **CommonJS:** funciona, pero se prefirió ESM por coherencia con Node moderno y Angular.
 - **Pruebas contra la base local:** riesgo de contaminar datos reales; prohibido por la constitución.
 - **Servidor HTTP de prueba separado:** se usa supertest sobre la misma fábrica `crearApp`.
@@ -174,7 +174,7 @@ No se usa TDD en esta fase porque no hay reglas de negocio; las pruebas se escri
 ## Actualizaciones de documentación
 
 - `docs/modelo-datos.md`: documento nuevo con el esquema real.
-- `README.md`: se elimina toda mención a `db:setup`/`seed`, se documenta la ejecución del script en Studio 3T y se actualizan integrantes, estructura y usuarios.
+- `README.md`: se elimina toda referencia a scripts de creación de la base y se documenta la ejecución del script en Studio 3T; también se actualizan integrantes, estructura y usuarios.
 - `specs/constitution.md`: se ajustan los artículos II, III, VI, IX y X a la base existente y a `bcryptjs` con coste 10.
 - `docs/README.md`: se agrega la sección de scripts de base de datos y se actualiza el estado.
-- `package.json` raíz: se eliminan los scripts `db:setup` y `seed`.
+- `package.json` raíz: se retiran los scripts de conveniencia que ya no aplican porque la base ya existe.

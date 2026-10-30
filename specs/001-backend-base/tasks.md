@@ -16,7 +16,7 @@
 - [x] Redactar `docs/modelo-datos.md` a partir del script real, con diagrama Mermaid y comparación relacional.
 - [x] Ajustar `README.md` (integrantes, base existente, Studio 3T, usuarios, estructura).
 - [x] Ajustar `specs/constitution.md` (base existente, `bcryptjs` coste 10, pruebas con validadores).
-- [x] Actualizar `docs/README.md` y quitar `db:setup`/`seed` del `package.json` raíz.
+- [x] Actualizar `docs/README.md` y retirar del `package.json` raíz los scripts de conveniencia que ya no aplican.
 
 ## B. Andamiaje del backend
 
