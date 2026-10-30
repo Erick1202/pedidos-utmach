@@ -25,6 +25,13 @@
         </a>
         @if (esAdmin()) {
           <a
+            routerLink="/admin/pedidos"
+            routerLinkActive="bg-white/20"
+            class="rounded-lg px-3 py-2 text-sm font-semibold text-blue-50 transition hover:bg-white/10"
+          >
+            Pedidos
+          </a>
+          <a
             routerLink="/admin/productos"
             routerLinkActive="bg-white/20"
             class="rounded-lg px-3 py-2 text-sm font-semibold text-blue-50 transition hover:bg-white/10"
@@ -39,6 +46,13 @@
             Categorías
           </a>
         } @else {
+          <a
+            routerLink="/mis-pedidos"
+            routerLinkActive="bg-white/20"
+            class="rounded-lg px-3 py-2 text-sm font-semibold text-blue-50 transition hover:bg-white/10"
+          >
+            Mis pedidos
+          </a>
           <a
             routerLink="/carrito"
             routerLinkActive="bg-white/20"

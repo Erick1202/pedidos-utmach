@@ -36,7 +36,7 @@ specs/00X-nombre/
 | [`002-autenticacion/`](002-autenticacion/) | `002-autenticacion` | Registro, login, JWT y guards por rol | ✅ Completada |
 | [`003-menu-productos/`](003-menu-productos/) | `003-menu-productos` | Catálogo, filtros, búsqueda de texto y CRUD admin | ✅ Completada |
 | [`004-carrito-pedido/`](004-carrito-pedido/) | `004-carrito-pedido` | Carrito, hora de recogida y creación del pedido (TDD) | ✅ Completada |
-| `005-estado-pedidos/` | `005-estado-pedidos` | Mis pedidos, pedidos activos y transiciones (TDD) | ⏳ Pendiente |
+| [`005-estado-pedidos/`](005-estado-pedidos/) | `005-estado-pedidos` | Mis pedidos, pedidos activos y transiciones (TDD) | ✅ Completada |
 | `006-reportes/` | `006-reportes` | Agregaciones, panel de reportes y documentación MongoDB | ⏳ Pendiente |
 | `007-ci-despliegue/` | `ci/github-actions` | GitHub Actions y guía de despliegue | ⏳ Pendiente |
 

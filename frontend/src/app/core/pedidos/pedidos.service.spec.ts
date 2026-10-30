@@ -34,4 +34,36 @@ describe('PedidosService', () => {
 
     expect(resultado).toEqual({ _id: 'x', total: 3 });
   });
+
+  it('pide mis pedidos con el límite opcional', () => {
+    let resultado: unknown;
+    servicio.misPedidos(5).subscribe((pedidos) => (resultado = pedidos));
+
+    const peticion = http.expectOne('http://localhost:3000/api/pedidos/mios?limite=5');
+    expect(peticion.request.method).toBe('GET');
+    peticion.flush({ pedidos: [{ _id: 'a' }] });
+
+    expect(resultado).toEqual([{ _id: 'a' }]);
+  });
+
+  it('pide los pedidos activos con y sin fecha', () => {
+    servicio.activos('2026-10-29').subscribe();
+    http
+      .expectOne('http://localhost:3000/api/pedidos/activos?fecha=2026-10-29')
+      .flush({ pedidos: [] });
+
+    servicio.activos().subscribe();
+    http.expectOne('http://localhost:3000/api/pedidos/activos').flush({ pedidos: [] });
+  });
+
+  it('avanza el estado con PATCH y devuelve el pedido actualizado', () => {
+    let resultado: Partial<Pedido> | undefined;
+    servicio.avanzarEstado('abc').subscribe((pedido) => (resultado = pedido));
+
+    const peticion = http.expectOne('http://localhost:3000/api/pedidos/abc/estado');
+    expect(peticion.request.method).toBe('PATCH');
+    peticion.flush({ pedido: { _id: 'abc', estado: 'preparando' } });
+
+    expect(resultado).toEqual({ _id: 'abc', estado: 'preparando' });
+  });
 });

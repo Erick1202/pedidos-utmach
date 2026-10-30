@@ -1,9 +1,14 @@
+import { ErrorAplicacion } from "../../utils/ErrorAplicacion.js";
 import { redondearMonto } from "../../utils/validacion.js";
 
 /**
  * Reglas de negocio puras del pedido: no acceden a la base ni al reloj del
  * sistema, para poder probarlas de forma determinista.
  */
+
+/** Orden único de los estados: no se retrocede ni se saltan pasos. */
+export const ESTADOS_PEDIDO = ["recibido", "preparando", "listo", "entregado"] as const;
+export type EstadoPedido = (typeof ESTADOS_PEDIDO)[number];
 
 export type ResultadoValidacion = { valido: true } | { valido: false; mensaje: string };
 
@@ -95,4 +100,35 @@ export function validarCantidades(items: Array<{ cantidad: number }>): Resultado
   }
 
   return VALIDO;
+}
+
+/**
+ * Estado que sigue a `estadoActual`. Lanza `409` si el pedido ya fue
+ * entregado y `400` si el valor no es un estado conocido.
+ */
+export function siguienteEstado(estadoActual: string): EstadoPedido {
+  const posicion = ESTADOS_PEDIDO.findIndex((estado) => estado === estadoActual);
+
+  if (posicion === -1) {
+    throw new ErrorAplicacion(400, `El estado «${estadoActual}» no es válido`);
+  }
+
+  const siguiente = ESTADOS_PEDIDO[posicion + 1];
+  if (!siguiente) {
+    throw new ErrorAplicacion(409, "El pedido ya fue entregado y no puede avanzar");
+  }
+
+  return siguiente;
+}
+
+/** Estados que el bar todavía debe atender. */
+export const ESTADOS_ACTIVOS: EstadoPedido[] = ["recibido", "preparando", "listo"];
+
+/**
+ * Límites de un día de calendario (`AAAA-MM-DD`) en Ecuador: de 05:00Z a
+ * 05:00Z del día siguiente. Ecuador continental no usa horario de verano.
+ */
+export function rangoDiaEcuador(fecha: string): { desde: Date; hasta: Date } {
+  const desde = new Date(`${fecha}T00:00:00-05:00`);
+  return { desde, hasta: new Date(desde.getTime() + 24 * 3600 * 1000) };
 }
