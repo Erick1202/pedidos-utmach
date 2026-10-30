@@ -15,7 +15,7 @@
 
 - [x] `CORS_ORIGINS` en `entorno.ts` con valores por defecto y validación (CA-08).
 - [x] `crearApp` recibe `origenesCors`; `server.ts` la pasa desde el entorno (CA-08).
-- [ ] Pruebas de CORS: orígenes por defecto, lista personalizada y origen ajeno (CA-08).
+- [x] Pruebas de CORS: orígenes por defecto, lista personalizada y origen ajeno (CA-08).
 - [x] Actualizar `.env.example` (CA-08).
 
 ## C. Frontend
