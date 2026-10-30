@@ -32,7 +32,7 @@
 
 ## E. Documentación y cierre
 
-- [ ] `docs/despliegue.md`: demo local, pipeline con Mermaid y migración futura a Atlas (CA-09).
+- [x] `docs/despliegue.md`: demo local, pipeline con Mermaid y migración futura a Atlas (CA-09).
 - [ ] README: «Integración continua», badge, app publicada, backend local y fases en ✅ (CA-09).
 - [ ] `specs/README.md`, `docs/README.md` y enmienda 1.2.0 de la constitución.
 - [ ] Validar el YAML y ejecutar localmente los comandos de los jobs `backend` y `frontend`.
