@@ -21,6 +21,9 @@ export const IDS = {
 const HASH_ADMIN = "$2b$10$GO/ZMAwNw/FaGlWFhtyZ7eI4eMFq6Y7AxFgo2r7qDOL3w0EPji70q";
 const HASH_ESTUDIANTE = "$2b$10$UxcLyPrl/3gWbnbXMZ67aOqjFqjj7iL6BHFgz5CFGAFSv7144PHFe";
 
+/** Secreto propio de la suite; evita leer `.env` en las pruebas. */
+export const SECRETO_PRUEBAS = "secreto-de-pruebas-pedidos-utmach-2026";
+
 export interface EntornoPruebas {
   mongod: MongoMemoryServer;
   cliente: MongoClient;

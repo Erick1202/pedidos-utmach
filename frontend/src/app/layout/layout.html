@@ -1,0 +1,58 @@
+<div class="min-h-screen bg-slate-50">
+  <header class="sticky top-0 z-20 bg-utmach-azul text-white shadow-lg shadow-blue-950/10">
+    <div
+      class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 py-3 sm:px-6"
+    >
+      <a routerLink="/menu" class="flex items-center gap-2.5" aria-label="Ir al menú">
+        <span
+          class="flex h-9 w-9 items-center justify-center rounded-xl bg-utmach-amarillo text-sm font-black text-utmach-azul-oscuro"
+          >PU</span
+        >
+        <span class="text-base font-black tracking-tight sm:text-lg">PedidosUTMACH</span>
+      </a>
+
+      <nav
+        class="order-3 flex w-full items-center gap-1 sm:order-2 sm:w-auto"
+        aria-label="Navegación principal"
+      >
+        <a
+          routerLink="/menu"
+          routerLinkActive="bg-white/20"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="rounded-lg px-3 py-2 text-sm font-semibold text-blue-50 transition hover:bg-white/10"
+        >
+          Menú
+        </a>
+        @if (esAdmin()) {
+          <a
+            routerLink="/admin"
+            routerLinkActive="bg-white/20"
+            class="rounded-lg px-3 py-2 text-sm font-semibold text-blue-50 transition hover:bg-white/10"
+          >
+            Administración
+          </a>
+        }
+      </nav>
+
+      <div class="order-2 flex items-center gap-3 sm:order-3">
+        <div class="hidden text-right sm:block">
+          <p class="text-sm font-bold leading-tight">{{ usuario()?.nombre }}</p>
+          <p class="text-xs text-blue-100">
+            {{ usuario()?.rol === 'admin' ? 'Administrador' : 'Estudiante' }}
+          </p>
+        </div>
+        <button
+          type="button"
+          (click)="cerrarSesion()"
+          class="rounded-lg border border-white/30 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-white/10"
+        >
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+    <router-outlet />
+  </main>
+</div>

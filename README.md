@@ -45,19 +45,19 @@ PROYECTOPARCIAL/
 │   │   ├── middleware/           # Autenticación, autorización, 404 y errores
 │   │   ├── modules/              # salud, auth, categorias, productos, pedidos, reportes
 │   │   ├── utils/                # ErrorAplicacion y traducción de errores
-│   │   ├── app.ts                # crearApp(db)
+│   │   ├── app.ts                # crearApp(db, { jwtSecret })
 │   │   └── server.ts             # Arranque, ping, conteos y apagado ordenado
 │   ├── tests/                    # Pruebas con MongoDB en memoria (nunca la BD local)
 │   └── .env.example
 ├── database/                     # Scripts de la base existente (fuente de verdad)
 │   ├── pedidos_utmach.js         # Colecciones, validadores, índices y datos de prueba
 │   └── consultas_pedidos_utmach.js
-├── frontend/                     # Aplicación Angular
+├── frontend/                     # Aplicación Angular 22
 │   └── src/
 │       ├── app/
-│       │   ├── core/             # Modelos, servicios, interceptores y guards
-│       │   ├── features/         # auth, menu, carrito, pedidos, admin
-│       │   └── shared/           # Componentes reutilizables
+│       │   ├── core/             # Modelos, AuthService, almacenamiento, interceptor y guards
+│       │   ├── features/         # Login, registro, menú y administración
+│       │   └── layout/           # Navbar y contenedor de rutas protegidas
 │       └── environments/         # URL de la API por entorno
 ├── docs/                         # Modelo de datos, consultas, Studio 3T, despliegue
 ├── specs/                        # Spec Driven Development
@@ -70,7 +70,7 @@ PROYECTOPARCIAL/
 ## Requisitos
 
 - **Windows 10/11** con PowerShell (los comandos de esta guía usan PowerShell).
-- **Node.js 22.12 o superior** y npm 10 o superior. El proyecto también funciona con Node 24.
+- **Node.js** en una versión compatible con Angular 22 (`^22.22.3`, `^24.15.0` o `>=26`) y npm 10 o superior.
 - **MongoDB Community Server** instalado y corriendo como servicio de Windows (servicio `MongoDB`).
 - **Git** 2.40 o superior.
 - **Angular CLI** (opcional, se puede usar `npx ng`). La versión del proyecto la fija `frontend/package.json`.
@@ -87,8 +87,6 @@ git clone https://github.com/Erick1202/PROYECTOPARCIAL.git
 cd PROYECTOPARCIAL
 npm run install:all
 ```
-
-> Si el frontend todavía no existe (fases iniciales), instala solo el backend con `npm install --prefix backend`.
 
 ### 2. Configurar las variables de entorno del backend
 
@@ -179,7 +177,7 @@ Todas las rutas usan el prefijo `/api` y responden JSON.
 | Pedidos (admin) | `GET /pedidos/activos`, `PATCH /pedidos/:id/estado` | Admin |
 | Reportes | `GET /reportes/mas-vendidos`, `/ventas-por-dia`, `/hora-pico`, `/ventas-por-categoria`, `/resumen` | Admin |
 
-El detalle de cada endpoint se documenta en [`specs/`](specs/) y en las pruebas del backend.
+El detalle de cada endpoint se documenta en [`specs/`](specs/) y en las pruebas del backend. En la fase 2 están implementados **Salud** y **Autenticación**; las rutas de categorías, productos, pedidos y reportes se agregan en las fases 3 a 6.
 
 ## Pruebas
 
@@ -195,8 +193,6 @@ npm test
 ```
 
 > Las pruebas del backend levantan una instancia efímera de MongoDB en memoria con los mismos validadores e índices de `database/pedidos_utmach.js`. La base `pedidos_utmach` de tu máquina no se lee ni se modifica durante las pruebas.
->
-> Mientras el frontend todavía no exista (fases iniciales), usa `npm run test:backend`. Cuando esté creado, `npm test` ejecutará ambas suites.
 
 ## Flujo de trabajo Git (GitHub Flow + SDD)
 
@@ -248,7 +244,7 @@ npm test
 | --- | --- | --- |
 | 0 · Estructura del monorepo | `chore/estructura` | ✅ Completada |
 | 1 · Backend base y documentación del modelo | `001-backend-base` | ✅ Completada |
-| 2 · Autenticación y guards | `002-autenticacion` | ⏳ Pendiente |
+| 2 · Autenticación y guards | `002-autenticacion` | ✅ Completada |
 | 3 · Menú, productos y admin | `003-menu-productos` | ⏳ Pendiente |
 | 4 · Carrito y pedido | `004-carrito-pedido` | ⏳ Pendiente |
 | 5 · Estados de pedidos | `005-estado-pedidos` | ⏳ Pendiente |
