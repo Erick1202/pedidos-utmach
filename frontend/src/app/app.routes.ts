@@ -39,6 +39,12 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'mis-pedidos',
+        canActivate: [estudianteGuard],
+        loadComponent: () =>
+          import('./features/mis-pedidos/mis-pedidos').then((modulo) => modulo.MisPedidos),
+      },
+      {
         path: 'admin',
         canActivate: [adminGuard],
         children: [
@@ -51,6 +57,13 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/admin/productos/admin-productos').then(
                 (modulo) => modulo.AdminProductos,
+              ),
+          },
+          {
+            path: 'pedidos',
+            loadComponent: () =>
+              import('./features/admin/pedidos/admin-pedidos').then(
+                (modulo) => modulo.AdminPedidos,
               ),
           },
           {
