@@ -20,8 +20,8 @@
 
 ## C. Frontend
 
-- [ ] `environment.prod.ts` y `fileReplacements` en `production` (CA-07).
-- [ ] Instalar `@vitest/browser-playwright` y `playwright`; script `test:ci` con ChromeHeadless (CA-03).
+- [x] `environment.prod.ts` y `fileReplacements` en `production` (CA-07).
+- [ ] Instalar `@vitest/browser-playwright` y `playwright`; script `test:ci` con Chromium headless (CA-03).
 
 ## D. Pipeline
 
