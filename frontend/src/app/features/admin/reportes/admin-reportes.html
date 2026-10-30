@@ -1,0 +1,188 @@
+<section class="space-y-6">
+  <header class="space-y-4">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-utmach-azul-claro">
+        Administración
+      </p>
+      <h1 class="mt-1 text-2xl font-black tracking-tight text-slate-900">Reportes</h1>
+      <p class="text-sm text-slate-500">
+        Ventas calculadas con agregaciones de MongoDB, por día de recogida en hora de Ecuador.
+      </p>
+    </div>
+
+    <div
+      class="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:flex-wrap sm:items-end"
+    >
+      <div class="flex flex-wrap gap-2" role="group" aria-label="Rangos rápidos">
+        @for (boton of botonesRapidos; track boton.tipo) {
+          <button
+            type="button"
+            (click)="elegirRapido(boton.tipo)"
+            [attr.aria-pressed]="rapido() === boton.tipo"
+            class="rounded-lg px-3 py-2 text-xs font-bold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-utmach-azul-claro/30"
+            [class]="
+              rapido() === boton.tipo
+                ? 'bg-utmach-azul text-white'
+                : 'border border-slate-300 bg-white text-slate-700 hover:border-utmach-azul-claro hover:text-utmach-azul'
+            "
+          >
+            {{ boton.etiqueta }}
+          </button>
+        }
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 sm:ml-auto sm:flex">
+        <label class="text-xs font-bold text-slate-600">
+          Desde
+          <input
+            type="date"
+            [value]="rango().desde ?? ''"
+            (change)="cambiarFecha('desde', $event)"
+            class="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900 focus:border-utmach-azul-claro focus:outline-none focus:ring-4 focus:ring-utmach-azul-claro/20"
+          />
+        </label>
+        <label class="text-xs font-bold text-slate-600">
+          Hasta
+          <input
+            type="date"
+            [value]="rango().hasta ?? ''"
+            (change)="cambiarFecha('hasta', $event)"
+            class="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900 focus:border-utmach-azul-claro focus:outline-none focus:ring-4 focus:ring-utmach-azul-claro/20"
+          />
+        </label>
+      </div>
+
+      @if (errorFiltro(); as mensaje) {
+        <p class="w-full text-xs font-semibold text-red-600" role="alert">{{ mensaje }}</p>
+      }
+    </div>
+  </header>
+
+  @if (error(); as mensaje) {
+    <div
+      class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+      role="alert"
+    >
+      <span>{{ mensaje }}</span>
+      <button type="button" (click)="reintentar()" class="font-bold underline">Reintentar</button>
+    </div>
+  }
+
+  @if (cargando()) {
+    <div class="space-y-4" aria-label="Cargando reportes" aria-busy="true">
+      <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <div class="h-24 animate-pulse rounded-2xl border border-slate-200 bg-white"></div>
+        }
+      </div>
+      <div class="grid gap-4 lg:grid-cols-2">
+        @for (i of [1, 2]; track i) {
+          <div class="h-72 animate-pulse rounded-2xl border border-slate-200 bg-white"></div>
+        }
+      </div>
+    </div>
+  } @else if (datos(); as reportes) {
+    <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <article class="rounded-2xl bg-utmach-azul p-4 text-white shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-wide text-blue-100">Total de ventas</p>
+        <p class="mt-2 text-xl font-black sm:text-2xl">
+          {{ reportes.resumen.totales.ventas | currency: 'USD' : 'symbol' : '1.2-2' }}
+        </p>
+      </article>
+      <article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Pedidos</p>
+        <p class="mt-2 text-xl font-black text-slate-900 sm:text-2xl">
+          {{ reportes.resumen.totales.pedidos }}
+        </p>
+        <p class="text-xs text-slate-500">{{ reportes.resumen.hoy }} para hoy</p>
+      </article>
+      <article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Ticket promedio</p>
+        <p class="mt-2 text-xl font-black text-slate-900 sm:text-2xl">
+          {{ reportes.resumen.totales.ticketPromedio | currency: 'USD' : 'symbol' : '1.2-2' }}
+        </p>
+      </article>
+      <article class="rounded-2xl border border-amber-200 bg-amber-50 p-4 shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-wide text-amber-800">Pedidos activos</p>
+        <p class="mt-2 text-xl font-black text-amber-900 sm:text-2xl">
+          {{ reportes.resumen.activos }}
+        </p>
+        <p class="text-xs text-amber-800">Recibidos, en preparación o listos</p>
+      </article>
+    </div>
+
+    @if (sinDatos()) {
+      <p
+        class="rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-12 text-center text-sm font-semibold text-slate-500"
+      >
+        Sin datos en este rango.
+      </p>
+    } @else {
+      <div class="grid gap-4 lg:grid-cols-2">
+        <article class="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <h2 class="text-sm font-black text-slate-900">Productos más vendidos</h2>
+          <p class="mb-3 text-xs text-slate-500">Unidades vendidas (top 5)</p>
+          @if (graficoMasVendidos(); as config) {
+            <app-grafico [config]="config" descripcion="Barras de los productos más vendidos" />
+          }
+        </article>
+
+        <article class="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <h2 class="text-sm font-black text-slate-900">Ventas por categoría</h2>
+          <p class="mb-3 text-xs text-slate-500">Participación en los ingresos</p>
+          @if (graficoCategorias(); as config) {
+            <app-grafico [config]="config" descripcion="Dona de ventas por categoría" />
+          }
+        </article>
+
+        <article class="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <h2 class="text-sm font-black text-slate-900">Ventas por día</h2>
+          <p class="mb-3 text-xs text-slate-500">Total vendido por día de recogida</p>
+          @if (graficoVentasPorDia(); as config) {
+            <app-grafico [config]="config" descripcion="Barras de ventas por día" />
+          }
+        </article>
+
+        <article class="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <h2 class="text-sm font-black text-slate-900">Hora pico</h2>
+          <p class="mb-3 text-xs text-slate-500">
+            Pedidos por hora de recogida; en amarillo, la más concurrida
+          </p>
+          @if (graficoHoraPico(); as config) {
+            <app-grafico [config]="config" descripcion="Barras de pedidos por hora de recogida" />
+          }
+        </article>
+      </div>
+
+      <article class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <h2 class="px-4 pt-4 text-sm font-black text-slate-900">Por estudiante</h2>
+        <div class="overflow-x-auto">
+          <table class="mt-3 w-full min-w-[22rem] text-left text-sm">
+            <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+              <tr>
+                <th scope="col" class="px-4 py-2 font-bold">Estudiante</th>
+                <th scope="col" class="px-4 py-2 text-right font-bold">Pedidos</th>
+                <th scope="col" class="px-4 py-2 text-right font-bold">Gasto</th>
+                <th scope="col" class="px-4 py-2 text-right font-bold">Ticket</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              @for (fila of reportes.porEstudiante; track fila.estudiante) {
+                <tr>
+                  <td class="px-4 py-2 font-semibold text-slate-900">{{ fila.estudiante }}</td>
+                  <td class="px-4 py-2 text-right text-slate-700">{{ fila.pedidos }}</td>
+                  <td class="px-4 py-2 text-right font-bold text-utmach-azul">
+                    {{ fila.gasto | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </td>
+                  <td class="px-4 py-2 text-right text-slate-700">
+                    {{ fila.ticket | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </article>
+    }
+  }
+</section>

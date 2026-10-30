@@ -19,13 +19,13 @@ import { AuthService } from '../../core/auth/auth.service';
             Panel del administrador
           </h1>
           <p class="mt-2 max-w-xl text-sm leading-relaxed text-blue-100">
-            Bienvenido, {{ usuario()?.nombre }}. Desde aquí administras el menú y los pedidos del
-            bar.
+            Bienvenido, {{ usuario()?.nombre }}. Desde aquí administras el menú, los pedidos y los
+            reportes del bar.
           </p>
         </div>
       </div>
 
-      <div class="grid gap-4 sm:grid-cols-3">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <a
           routerLink="/admin/productos"
           class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-utmach-azul-claro hover:shadow-md focus:outline-none focus-visible:ring-4 focus-visible:ring-utmach-azul-claro/30"
@@ -62,6 +62,19 @@ import { AuthService } from '../../core/auth/auth.service';
           </h2>
           <p class="mt-2 text-sm leading-relaxed text-slate-500">
             Atiende los pedidos del día y avánzalos de recibido a entregado.
+          </p>
+        </a>
+
+        <a
+          routerLink="/admin/reportes"
+          class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-utmach-azul-claro hover:shadow-md focus:outline-none focus-visible:ring-4 focus-visible:ring-utmach-azul-claro/30"
+        >
+          <p class="text-xs font-bold uppercase tracking-wide text-utmach-azul-claro">Ventas</p>
+          <h2 class="mt-2 text-lg font-bold text-slate-900 group-hover:text-utmach-azul">
+            Reportes →
+          </h2>
+          <p class="mt-2 text-sm leading-relaxed text-slate-500">
+            Más vendidos, ventas por día y categoría, hora pico y gasto por estudiante.
           </p>
         </a>
       </div>
