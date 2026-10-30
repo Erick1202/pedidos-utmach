@@ -1,8 +1,8 @@
 # Constitución de PedidosUTMACH
 
-**Versión:** 1.1.0
+**Versión:** 1.2.0
 **Fecha de ratificación:** 2026-10-28
-**Última enmienda:** 2026-10-29
+**Última enmienda:** 2026-10-30
 **Ámbito:** todo el monorepo (`frontend`, `backend`, `database`, `docs`, `specs` y flujos de Git/CI).
 **Ratificada por:** equipo del proyecto PedidosUTMACH.
 
@@ -45,7 +45,7 @@ Esta constitución fija los principios no negociables. Cuando una decisión téc
 3. `JWT_SECRET` vive **únicamente** en `backend/.env`. El frontend nunca recibe secretos: solo el token emitido. `backend/.env` está en `.gitignore` y se versiona exclusivamente `backend/.env.example` con valores de ejemplo.
 4. Toda entrada se valida con **zod** (cuerpo, parámetros de ruta y query). El servidor **recalcula los precios y el total** desde la base de datos al crear un pedido y verifica la disponibilidad; nunca confía en precios ni totales enviados por el cliente.
 5. La autorización se aplica en dos capas: middleware `autenticar` + `autorizar("admin")` en el backend, y guards funcionales por rol en Angular. Ocultar un botón no sustituye la comprobación del servidor.
-6. CORS se limita a `http://localhost:4200`. Los errores se devuelven en JSON con mensajes en español, sin trazas ni detalles internos en producción.
+6. CORS se limita a los orígenes de `CORS_ORIGINS` (por defecto `http://localhost:4200` y `https://erick1202.github.io`, el origen de GitHub Pages). Los errores se devuelven en JSON con mensajes en español, sin trazas ni detalles internos en producción.
 7. El login responde con un mensaje genérico («Correo o contraseña incorrectos») para no revelar qué correos existen. El registro sí informa cuando el correo ya está en uso.
 8. La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un dígito y un carácter especial. El hash se compara con `bcrypt.compare`; nunca con `===`.
 9. No se registran tokens, contraseñas ni datos personales en logs. Los pagos son simulados: no se integra ninguna pasarela real.
@@ -120,7 +120,7 @@ Esta constitución fija los principios no negociables. Cuando una decisión téc
 
 1. El workflow `.github/workflows/ci.yml` se ejecuta en cada `pull_request` y en cada `push` a `main`.
 2. Job `backend`: `npm ci`, lint sin advertencias y Vitest con `mongodb-memory-server`.
-3. Job `frontend`: `npm ci`, `ng test --watch=false` y `ng build --base-href /pedidos-utmach/`, copiando `index.html` a `404.html` para GitHub Pages.
+3. Job `frontend`: `npm ci`, `ng test --watch=false` en Chromium headless y `ng build --base-href /pedidos-utmach/`, copiando `index.html` a `404.html` para GitHub Pages.
 4. Job `deploy`: solo en `push` a `main` y dependiente de los dos anteriores; publica el frontend en GitHub Pages con `actions/upload-pages-artifact` y `actions/deploy-pages`.
 5. Un PR solo es fusionable con el CI en verde y sin conflictos. No se desactivan pruebas ni reglas de lint para «arreglar» el CI.
 6. **Definición de terminado:** código implementado, pruebas en verde, documentación y `tasks.md` actualizados, sin secretos versionados y CI en verde.
@@ -137,6 +137,7 @@ Esta constitución fija los principios no negociables. Cuando una decisión téc
 | --- | --- | --- |
 | 1.0.0 | 2026-10-28 | Ratificación inicial. |
 | 1.1.0 | 2026-10-29 | La base `pedidos_utmach` ya existe: se retiran los scripts de creación de la base, se agrega `database/` como fuente de verdad, `bcryptjs` con coste 10, payload JWT `_id`/`nombre`/`rol`, helper de pruebas con validadores e índices reales y reglas de zona horaria. |
+| 1.2.0 | 2026-10-30 | CORS configurable con `CORS_ORIGINS` para admitir la app publicada en GitHub Pages; pruebas del frontend en Chromium headless en el CI (fase 7). |
 - Las excepciones puntuales se documentan en el `plan.md` de la funcionalidad con su justificación y fecha; no modifican la constitución.
 - En caso de duda, se pregunta antes de asumir. Una decisión no documentada se considera deuda técnica.
 - La conformidad se verifica en cada Pull Request mediante la lista de comprobación del Artículo X.
