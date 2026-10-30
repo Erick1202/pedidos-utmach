@@ -1,8 +1,9 @@
 # Constitución de PedidosUTMACH
 
-**Versión:** 1.0.0
+**Versión:** 1.1.0
 **Fecha de ratificación:** 2026-10-28
-**Ámbito:** todo el monorepo (`frontend`, `backend`, `docs`, `specs` y flujos de Git/CI).
+**Última enmienda:** 2026-10-29
+**Ámbito:** todo el monorepo (`frontend`, `backend`, `database`, `docs`, `specs` y flujos de Git/CI).
 **Ratificada por:** equipo del proyecto PedidosUTMACH.
 
 ## Preámbulo
@@ -31,16 +32,16 @@ Esta constitución fija los principios no negociables. Cuando una decisión téc
    - recálculo de precios y validación de disponibilidad al crear un pedido;
    - registro, login y autorización por rol.
 2. Las tres funcionalidades críticas se desarrollan con **TDD**: primero se escribe una prueba que falla (commit `test:`), después el código mínimo que la hace pasar (commit `feat:`) y, si hace falta, una refactorización sin cambiar el comportamiento.
-3. En el backend se usa **Vitest + supertest + mongodb-memory-server**. Las pruebas **nunca** se conectan a la base local del desarrollador ni a una base compartida: cada suite levanta su propia instancia efímera y la detiene al terminar.
-4. Las pruebas son deterministas: no dependen de la hora real (se inyecta el reloj o se usan fechas fijas), del orden de ejecución ni de datos remanentes. Cada prueba prepara y limpia su estado.
+3. En el backend se usa **Vitest + supertest + mongodb-memory-server**. Las pruebas **nunca** se conectan a la base local del desarrollador ni a una base compartida: cada suite levanta su propia instancia efímera y la detiene al terminar. El helper de pruebas replica los validadores `$jsonSchema` y los índices de `database/pedidos_utmach.js`; si el esquema real cambia, el helper se actualiza en el mismo PR.
+4. Las pruebas son deterministas: no dependen de la hora real (se inyecta el reloj o se usan fechas fijas), del orden de ejecución ni de datos remanentes. Cada prueba prepara y limpia su estado. Las reglas de hora se prueban con la zona `America/Guayaquil`.
 5. En el frontend se usa el **runner por defecto de Angular** (`ng test`). Se prueban servicios, guards, interceptores y los componentes con lógica relevante; los componentes puramente presentacionales pueden omitirse.
 6. Un Pull Request no se abre si alguna prueba falla. No se permiten pruebas omitidas (`skip`, `todo`) sin una tarea registrada que las recupere.
 7. La cobertura es una señal, no una meta: se exige cobertura alta (≥ 80 % de líneas) en los módulos con TDD y se revisa en el PR, pero el CI no bloquea por porcentaje global.
 
 ## Artículo III. Seguridad
 
-1. Las contraseñas se almacenan **solo** como hash con `bcrypt` (coste 12). Nunca se guardan, registran ni devuelven en texto plano; las respuestas de la API jamás incluyen `passwordHash`.
-2. La autenticación usa **JWT** firmado con HS256. El token incluye `sub` (id del usuario) y `rol`, y expira en 8 horas. El cliente lo envía como `Authorization: Bearer <token>`.
+1. Las contraseñas se almacenan **solo** como hash con `bcryptjs` (coste 10, compatible con los hashes `$2b$10` existentes). Nunca se guardan, registran ni devuelven en texto plano; las respuestas de la API jamás incluyen `passwordHash`.
+2. La autenticación usa **JWT** firmado con HS256. El token incluye `_id`, `nombre` y `rol`, y expira en 8 horas. El cliente lo envía como `Authorization: Bearer <token>`.
 3. `JWT_SECRET` vive **únicamente** en `backend/.env`. El frontend nunca recibe secretos: solo el token emitido. `backend/.env` está en `.gitignore` y se versiona exclusivamente `backend/.env.example` con valores de ejemplo.
 4. Toda entrada se valida con **zod** (cuerpo, parámetros de ruta y query). El servidor **recalcula los precios y el total** desde la base de datos al crear un pedido y verifica la disponibilidad; nunca confía en precios ni totales enviados por el cliente.
 5. La autorización se aplica en dos capas: middleware `autenticar` + `autorizar("admin")` en el backend, y guards funcionales por rol en Angular. Ocultar un botón no sustituye la comprobación del servidor.
@@ -83,12 +84,13 @@ Esta constitución fija los principios no negociables. Cuando una decisión téc
    - Los **items del pedido se embeben** porque se leen siempre con el pedido, su número es acotado y necesitan un snapshot del precio al momento de la compra.
    - La **categoría se desnormaliza** dentro del producto (`{ _id, nombre }`) porque el menú se lee por categoría y el nombre cambia con muy baja frecuencia.
    - **Usuarios y productos se referencian** por `_id` (con el nombre copiado cuando la vista lo necesita) porque son entidades independientes, reutilizadas por muchos documentos y con ciclo de vida propio.
-3. Toda colección se crea con un validador `$jsonSchema` y `validationLevel: "strict"`. El script `setup.ts` debe ser idempotente: usa `createCollection` o `collMod` según exista la colección.
-4. Los índices se declaran **solo** en `setup.ts`, con los nombres y campos acordados. No se crean índices ad hoc desde la aplicación ni desde Studio 3T para «probar».
-5. Las agregaciones viven en la capa de servicio, comienzan por `$match` sobre campos indexados cuando sea posible y limitan el volumen de datos antes de agrupar.
-6. Fechas en UTC (`Date` de BSON); en la interfaz se muestran en hora local de Ecuador (UTC-5).
-7. El seed borra y recrea **únicamente** la base `pedidos_utmach`. Está prohibido tocar `admin`, `config` o `local`.
+3. La base `pedidos_utmach` **ya existe** y su fuente de verdad es `database/pedidos_utmach.js`, que contiene los validadores `$jsonSchema` con `validationLevel: "strict"` y los índices. El backend **no** crea, borra ni modifica colecciones, validadores ni índices, y no incluye scripts de seed ni de setup.
+4. Los índices existentes (`ux_email`, `ux_slug`, `ix_categoria_disponible`, `tx_busqueda`, `ix_usuario_fecha`, `ix_estado_hora`) no se crean ni se alteran desde la aplicación. Cualquier cambio de esquema se hace en el script de la base y se replica en el helper de pruebas.
+5. Las agregaciones viven en la capa de servicio, reutilizan los pipelines de `database/consultas_pedidos_utmach.js`, comienzan por `$match` sobre campos indexados cuando sea posible y limitan el volumen de datos antes de agrupar.
+6. Fechas en UTC (`Date` de BSON); la interfaz y las reglas de negocio usan la zona `America/Guayaquil` (UTC-5). El día se delimita entre las 05:00Z y las 05:00Z siguientes.
+7. Prohibido tocar las bases `admin`, `config` y `local`. El script de la base solo puede ejecutarse de forma deliberada y recrea únicamente `pedidos_utmach` (empieza con `dropDatabase`).
 8. La aplicación debe funcionar igual con MongoDB local y con MongoDB Atlas cambiando solo `MONGODB_URI`; ninguna cadena de conexión se codifica en el código fuente.
+9. Todo id persistido es `ObjectId`; toda fecha, `Date`; todo monto se redondea a dos decimales. Los errores 121 (`Document failed validation`) y 11000 (clave duplicada) se traducen a respuestas en español.
 
 ## Artículo VII. Frontend y experiencia de usuario
 
@@ -105,13 +107,14 @@ Esta constitución fija los principios no negociables. Cuando una decisión téc
 2. Cada endpoint documenta método, ruta, rol requerido, cuerpo, respuesta y errores posibles.
 3. `docs/` es la fuente de verdad para el modelo de datos, las consultas, Studio 3T y el despliegue. Si el código cambia, los documentos se actualizan en el mismo PR.
 4. Los documentos usan Markdown, diagramas Mermaid cuando aporten y bloques de comandos copiables para **PowerShell**.
+5. Los scripts de `database/` son la fuente de verdad del esquema y de las consultas de referencia. No se modifican desde el backend ni se reemplazan por scripts de seed propios.
 
 ## Artículo IX. Entorno y portabilidad
 
 1. La documentación de ejecución usa **PowerShell** (Windows). Los scripts de npm deben ser multiplataforma; si se necesitan variables de entorno se usa `cross-env`.
 2. La URI de MongoDB usa `127.0.0.1`, nunca `localhost`, para evitar la resolución IPv6 (`::1`) en Windows.
 3. No se codifican rutas absolutas de la máquina del desarrollador en código, configuración ni documentación.
-4. El CI se ejecuta en `ubuntu-latest` con Node.js 22, de modo que el proyecto no dependa de Windows.
+4. El desarrollo local usa Node.js 24 y el CI se ejecuta en `ubuntu-latest` con Node.js 22, de modo que el proyecto funcione en ambas versiones y no dependa de Windows.
 
 ## Artículo X. Calidad y CI
 
@@ -127,6 +130,13 @@ Esta constitución fija los principios no negociables. Cuando una decisión téc
 ## Gobernanza
 
 - Esta constitución se versiona con SemVer. Cualquier enmienda se propone en un PR que modifique este archivo, explique el motivo y actualice la versión.
+
+### Historial de enmiendas
+
+| Versión | Fecha | Cambio |
+| --- | --- | --- |
+| 1.0.0 | 2026-10-28 | Ratificación inicial. |
+| 1.1.0 | 2026-10-29 | La base `pedidos_utmach` ya existe: se eliminan `setup.ts` y el seed, se agrega `database/` como fuente de verdad, `bcryptjs` con coste 10, payload JWT `_id`/`nombre`/`rol`, helper de pruebas con validadores e índices reales y reglas de zona horaria. |
 - Las excepciones puntuales se documentan en el `plan.md` de la funcionalidad con su justificación y fecha; no modifican la constitución.
 - En caso de duda, se pregunta antes de asumir. Una decisión no documentada se considera deuda técnica.
 - La conformidad se verifica en cada Pull Request mediante la lista de comprobación del Artículo X.
