@@ -35,7 +35,7 @@ Todas las rutas llevan el prefijo `/api/auth`.
 
 - `nombre`: string recortado, mínimo 3, máximo 100.
 - `email`: string recortado, formato de correo, transformado a minúsculas.
-- `password`: string de 8 a 72 caracteres (bcrypt usa como máximo 72 bytes).
+- `password`: string de 8 a 72 caracteres, con al menos una mayúscula, una minúscula, un número y un símbolo (bcrypt usa como máximo 72 bytes).
 - Los esquemas son `.strict()`: enviar `rol`, `passwordHash` o campos desconocidos devuelve `400`.
 - Login: correo válido y contraseña no vacía; **no** se recorta la contraseña.
 
@@ -104,7 +104,7 @@ Se amplía el helper existente con un `SECRETO_PRUEBAS` y se agrega `tests/auth.
 
 1. Registro exitoso: `201`, correo en minúsculas, rol forzado, hash bcrypt verificable, sin `passwordHash` en la respuesta.
 2. Correo duplicado: `409` exacto.
-3. Cuerpo inválido y campo `rol`: `400` con detalles.
+3. Cuerpo inválido, contraseña débil y campo `rol`: `400` con detalles.
 4. Login del admin y de Ana con los hashes reales del script: `200`, token decodificable con `_id`, `nombre`, `rol` y `exp` ~8 h.
 5. Contraseña incorrecta y correo inexistente: `401` con el mismo mensaje.
 6. Perfil con token: `200` sin `passwordHash`.
@@ -138,11 +138,12 @@ frontend/src/
 │   │   │   ├── auth.service.ts          # login, registro, perfil, logout
 │   │   │   ├── token-storage.service.ts # localStorage
 │   │   │   ├── auth.interceptor.ts      # Bearer
-│   │   │   └── auth.guard.ts / admin.guard.ts
+│   │   │   ├── auth.guard.ts / admin.guard.ts / guest.guard.ts
+│   │   │   └── *.spec.ts                # pruebas de servicio, guards e interceptor
 │   │   └── models/usuario.ts
 │   ├── features/
-│   │   ├── auth/login/login.ts + .html + .css
-│   │   ├── auth/registro/registro.ts + .html + .css
+│   │   ├── auth/login/login.ts + .html
+│   │   ├── auth/registro/registro.ts + .html
 │   │   ├── menu/menu.ts                  # marcador de la fase 3
 │   │   └── admin/admin.ts                # marcador de la fase 5
 │   ├── layout/layout.ts + .html          # navbar + router-outlet
@@ -157,20 +158,20 @@ frontend/src/
 
 - `TokenStorageService` usa las claves `pedidos_utmach_token` y `pedidos_utmach_usuario`.
 - `AuthService` expone `usuario`, `autenticado`, `esAdmin` como signals y `login`, `registrar`, `cerrarSesion`, `restaurarSesion`.
-- `provideAppInitializer` ejecuta `restaurarSesion()` antes de activar rutas: si hay token, llama a `/auth/perfil`; si falla, limpia la sesión.
-- `authInterceptor` lee el token del almacenamiento y agrega `Authorization: Bearer`; no usa `AuthService`, evitando dependencias circulares con `HttpClient`.
-- `authGuard` exige sesión; `adminGuard` exige rol `admin` y redirige a `/menu` si es estudiante.
-- El interceptor no adjunta el token a las llamadas de login/registro si no existe.
+- `provideAppInitializer` ejecuta `restaurarSesion()` antes de activar rutas: si hay token, llama a `/auth/perfil` con un límite de 5 segundos; si falla, limpia la sesión.
+- `authInterceptor` lee el token del almacenamiento y agrega `Authorization: Bearer` solo a las peticiones de `environment.apiUrl`; no usa `AuthService`, evitando dependencias circulares con `HttpClient`.
+- `authGuard` exige sesión; `adminGuard` exige rol `admin` y redirige a `/menu` si es estudiante; `guestGuard` impide que un usuario con sesión vuelva a `/login` o `/registro`.
+- No se usa `withViewTransitions()`: en el navegador de verificación la transición podía quedar pendiente y bloquear la navegación inicial.
 
 ### 12. Rutas
 
 | Ruta | Componente | Guard |
 | --- | --- | --- |
-| `/login` | Login | Pública |
-| `/registro` | Registro | Pública |
+| `/login` | Login | `guestGuard` |
+| `/registro` | Registro | `guestGuard` |
 | `/menu` | Marcador de menú | `authGuard` |
 | `/admin` | Marcador de admin | `authGuard` + `adminGuard` |
-| `/` y `**` | Redirección a `/menu` | — |
+| `/` y `**` | Redirección a `/menu` | `authGuard` |
 
 `/menu` y `/admin` viven dentro de un `Layout` con navbar, nombre del usuario, rol y botón «Cerrar sesión».
 
@@ -186,8 +187,8 @@ frontend/src/
 ### 14. Pruebas y compilación del frontend
 
 - `npm run build` debe generar el bundle de producción.
-- `npm test -- --watch=false` debe pasar con la prueba base del componente raíz (ajustada a la nueva plantilla) y, si aporta, una prueba del almacenamiento del token.
-- La verificación funcional se hace con el backend real y los usuarios existentes: login de admin y de Ana, recarga de la página, cierre de sesión y acceso denegado a `/admin` con rol estudiante.
+- `npm test -- --watch=false` cubre el componente raíz, `AuthService` (login, registro, restauración y cierre de sesión), los tres guards y el interceptor (token en la API, sin token y URL externa). Resultado de la fase: **4 archivos, 18 pruebas en verde**.
+- La verificación funcional se hace con el backend real y los usuarios existentes: login de admin y de Ana, recarga de la página, cierre de sesión, acceso denegado a `/admin` con rol estudiante, validaciones del registro y respuesta `409` al repetir un correo.
 
 ## Riesgos y mitigaciones
 
@@ -197,8 +198,9 @@ frontend/src/
 | El guard se ejecuta antes de restaurar la sesión. | `provideAppInitializer` espera a `restaurarSesion()`. |
 | Los hashes existentes no son compatibles. | Se usa `bcryptjs` con coste 10 y se prueba el login real de admin y Ana. |
 | El token queda en el historial o logs. | No se imprime; solo se guarda en `localStorage`. |
-| Angular 22 exige Node 24.15+ o 22.22.3+. | El equipo usa Node 24.21 y el CI fijará Node 22 actualizado en la fase 7. |
+| Angular 22 exige Node 22.22.3, 24.15+ o 26+. | El equipo usa Node 24.21 y el CI fijará Node 22 actualizado en la fase 7. |
 | Tailwind no procesa las plantillas. | El CLI crea la configuración con `--style tailwind`; se verifica con `npm run build`. |
+| La API de View Transitions bloquea la navegación en algunos navegadores. | No se usa `withViewTransitions()`; el router navega sin transiciones. |
 | El helper de pruebas toca la base local. | Sigue usando `mongodb-memory-server`; el secreto de pruebas es local a la suite. |
 
 ## Documentación de cierre

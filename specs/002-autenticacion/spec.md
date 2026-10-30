@@ -2,7 +2,7 @@
 
 **Issue:** #3
 **Rama:** `002-autenticacion`
-**Estado:** en curso
+**Estado:** completada
 **Depende de:** fase 1 (`001-backend-base`) y de los usuarios ya cargados en `pedidos_utmach`.
 
 ## Contexto
@@ -53,7 +53,7 @@ Como usuario, quiero pantallas de login y registro claras, con validaciones y me
 
 ### CA-04 — Validación del registro
 
-**Dado** un cuerpo con nombre menor a 3 caracteres, correo inválido, contraseña menor a 8 caracteres o un campo `rol`,
+**Dado** un cuerpo con nombre menor a 3 caracteres, correo inválido, contraseña menor a 8 caracteres o sin mayúscula, minúscula, número y símbolo, o un campo `rol`,
 **cuando** se solicita el registro,
 **entonces** responde `400` con `{ error: "Datos inválidos", detalles: [...] }` y no inserta nada.
 
@@ -121,7 +121,7 @@ Como usuario, quiero pantallas de login y registro claras, con validaciones y me
 
 1. El `rol` **nunca** se toma del cliente: el registro siempre crea `estudiante`.
 2. El correo se normaliza a minúsculas y se recorta antes de validar y guardar.
-3. La contraseña se almacena solo con `bcryptjs` (coste 10) y nunca se devuelve.
+3. La contraseña debe tener entre 8 y 72 caracteres e incluir al menos una mayúscula, una minúscula, un número y un símbolo; se almacena solo con `bcryptjs` (coste 10) y nunca se devuelve.
 4. El JWT se firma con HS256 y `JWT_SECRET`; dura 8 horas; su payload tiene `_id`, `nombre` y `rol`.
 5. Las respuestas de error mantienen el formato `{ error, detalles? }` de la fase 1.
 6. Los mensajes de login no distinguen entre correo inexistente y contraseña incorrecta.
