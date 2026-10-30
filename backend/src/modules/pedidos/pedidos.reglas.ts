@@ -1,4 +1,6 @@
+import { ErrorAplicacion } from "../../utils/ErrorAplicacion.js";
 import { redondearMonto } from "../../utils/validacion.js";
+import type { EstadoPedido } from "./pedidos.service.js";
 
 /**
  * Reglas de negocio puras del pedido: no acceden a la base ni al reloj del
@@ -95,4 +97,26 @@ export function validarCantidades(items: Array<{ cantidad: number }>): Resultado
   }
 
   return VALIDO;
+}
+
+/** Orden único de los estados: no se retrocede ni se saltan pasos. */
+const ORDEN_ESTADOS: EstadoPedido[] = ["recibido", "preparando", "listo", "entregado"];
+
+/**
+ * Estado que sigue a `estadoActual`. Lanza `409` si el pedido ya fue
+ * entregado y `400` si el valor no es un estado conocido.
+ */
+export function siguienteEstado(estadoActual: string): EstadoPedido {
+  const posicion = ORDEN_ESTADOS.indexOf(estadoActual as EstadoPedido);
+
+  if (posicion === -1) {
+    throw new ErrorAplicacion(400, `El estado «${estadoActual}» no es válido`);
+  }
+
+  const siguiente = ORDEN_ESTADOS[posicion + 1];
+  if (!siguiente) {
+    throw new ErrorAplicacion(409, "El pedido ya fue entregado y no puede avanzar");
+  }
+
+  return siguiente;
 }
