@@ -22,7 +22,7 @@
 
 ## C. Backend — endpoint
 
-- [x] Esquema zod `.strict()` del cuerpo (CA-05, CA-07).
+- [x] Esquema zod del cuerpo que descarta montos del cliente (CA-05, CA-07).
 - [x] Reloj inyectable en `crearApp` (regla 4).
 - [x] Servicio: productos desde la base, disponibilidad, totales e inserción (CA-04, CA-06).
 - [x] `POST /api/pedidos` solo para estudiantes (CA-08).
