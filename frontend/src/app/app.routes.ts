@@ -1,6 +1,7 @@
 import type { Routes } from '@angular/router';
 import { adminGuard } from './core/auth/admin.guard';
 import { authGuard } from './core/auth/auth.guard';
+import { estudianteGuard } from './core/auth/estudiante.guard';
 import { guestGuard } from './core/auth/guest.guard';
 
 export const routes: Routes = [
@@ -23,6 +24,19 @@ export const routes: Routes = [
       {
         path: 'menu',
         loadComponent: () => import('./features/menu/menu').then((modulo) => modulo.Menu),
+      },
+      {
+        path: 'carrito',
+        canActivate: [estudianteGuard],
+        loadComponent: () => import('./features/carrito/carrito').then((modulo) => modulo.Carrito),
+      },
+      {
+        path: 'confirmar-pedido',
+        canActivate: [estudianteGuard],
+        loadComponent: () =>
+          import('./features/confirmar-pedido/confirmar-pedido').then(
+            (modulo) => modulo.ConfirmarPedido,
+          ),
       },
       {
         path: 'admin',
