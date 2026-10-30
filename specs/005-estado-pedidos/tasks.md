@@ -15,7 +15,7 @@
 
 - [x] `test:` prueba en rojo de `siguienteEstado` (CA-01).
 - [x] `feat:` implementar `siguienteEstado` (CA-01).
-- [ ] `refactor:` derivar el tipo `EstadoPedido` de `ESTADOS_PEDIDO` (CA-01).
+- [x] `refactor:` derivar el tipo `EstadoPedido` de `ESTADOS_PEDIDO` (CA-01).
 
 ## C. Backend — endpoints
 

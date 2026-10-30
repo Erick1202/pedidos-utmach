@@ -6,11 +6,12 @@ import {
   calcularTotales,
   validarCantidades,
   validarHoraRecogida,
+  type EstadoPedido,
   type ResultadoValidacion
 } from "./pedidos.reglas.js";
 import type { DatosCrearPedido } from "./pedidos.schemas.js";
 
-export type EstadoPedido = "recibido" | "preparando" | "listo" | "entregado";
+export type { EstadoPedido };
 
 export interface ItemPedidoDocumento {
   productoId: ObjectId;
