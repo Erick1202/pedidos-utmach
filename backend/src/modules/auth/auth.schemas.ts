@@ -18,6 +18,10 @@ export const esquemaRegistro = z
       .string()
       .min(8, "La contraseña debe tener al menos 8 caracteres")
       .max(72, "La contraseña no puede superar los 72 caracteres")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s]).*$/,
+        "La contraseña debe incluir mayúscula, minúscula, número y símbolo"
+      )
   })
   .strict();
 
