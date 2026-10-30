@@ -1,5 +1,7 @@
 # PedidosUTMACH
 
+[![CI](https://github.com/Erick1202/pedidos-utmach/actions/workflows/ci.yml/badge.svg)](https://github.com/Erick1202/pedidos-utmach/actions/workflows/ci.yml)
+
 Aplicación web para pedir comida con anticipación en el bar de la **Universidad Técnica de Machala** y recogerla a la hora elegida, sin hacer fila en los recesos. Los pagos son simulados y quedan fuera del alcance del proyecto.
 
 > Proyecto académico desarrollado para las materias **Programación Móvil** (Angular, Git, GitHub Actions y Spec Driven Development) y **Bases de Datos No Estructuradas** (MongoDB: modelado de documentos, validación, índices y agregaciones).
@@ -29,8 +31,8 @@ Aplicación web para pedir comida con anticipación en el bar de la **Universida
 | Frontend | Angular 22 (componentes standalone, signals, Router, HttpClient), Tailwind CSS v4 (`@tailwindcss/postcss`), Chart.js, TypeScript estricto. |
 | Backend | Node.js 22+, Express 5, TypeScript, driver oficial `mongodb` (sin Mongoose), `bcryptjs`, `jsonwebtoken`, `zod`, `cors`, `dotenv`. |
 | Base de datos | MongoDB local `mongodb://127.0.0.1:27017/pedidos_utmach` (compatible con MongoDB Atlas cambiando solo la URI). La base ya está creada y poblada. |
-| Pruebas | Backend: Vitest + supertest + mongodb-memory-server. Frontend: runner por defecto de Angular (`ng test`). |
-| CI/CD | GitHub Actions + GitHub Pages (frontend) y Render (backend, opcional). |
+| Pruebas | Backend: Vitest + supertest + mongodb-memory-server. Frontend: runner por defecto de Angular (`ng test`, Vitest) en jsdom y, en el CI, en Chromium headless. |
+| CI/CD | GitHub Actions + GitHub Pages (frontend). El backend corre en la PC de la demo (Atlas + nube como opción futura). |
 
 ## Estructura del repositorio
 
@@ -83,8 +85,8 @@ PROYECTOPARCIAL/
 ### 1. Clonar e instalar dependencias
 
 ```powershell
-git clone https://github.com/Erick1202/PROYECTOPARCIAL.git
-cd PROYECTOPARCIAL
+git clone https://github.com/Erick1202/pedidos-utmach.git
+cd pedidos-utmach
 npm run install:all
 ```
 
@@ -100,6 +102,7 @@ Edita `backend/.env` si hace falta. Los valores por defecto son:
 MONGODB_URI=mongodb://127.0.0.1:27017/pedidos_utmach
 JWT_SECRET=cambia-este-secreto-por-uno-largo-y-aleatorio
 PORT=3000
+CORS_ORIGINS=http://localhost:4200,https://erick1202.github.io
 ```
 
 `backend/.env` está en `.gitignore`: **nunca** se sube al repositorio.
@@ -190,9 +193,28 @@ npm run test:frontend
 
 # Ambas suites
 npm test
+
+# Frontend en Chromium headless, como en el CI (la primera vez: npx playwright install chromium)
+npm run test:ci --prefix frontend
 ```
 
 > Las pruebas del backend levantan una instancia efímera de MongoDB en memoria con los mismos validadores e índices de `database/pedidos_utmach.js`. La base `pedidos_utmach` de tu máquina no se lee ni se modifica durante las pruebas.
+
+## Integración continua
+
+[![CI](https://github.com/Erick1202/pedidos-utmach/actions/workflows/ci.yml/badge.svg)](https://github.com/Erick1202/pedidos-utmach/actions/workflows/ci.yml)
+
+El workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) se ejecuta en cada Pull Request hacia `main` y en cada `push` a `main`:
+
+| Job | Pasos |
+| --- | --- |
+| `backend` | `npm ci`, lint, pruebas con MongoDB en memoria (binario en caché) y build. |
+| `frontend` | `npm ci`, pruebas en Chromium headless, build con `--base-href /pedidos-utmach/` y `404.html` para las rutas de Angular. |
+| `deploy` | Solo en `push` a `main`: publica el frontend en GitHub Pages. |
+
+**App publicada:** <https://erick1202.github.io/pedidos-utmach/>
+
+> ⚠️ La app publicada consume la API en `http://localhost:3000/api`. Para usarla, en el mismo equipo deben estar corriendo **MongoDB** (servicio `MongoDB`) y el **backend** (`npm run dev:backend`). Si el navegador pide permiso para acceder a la red local, acéptalo. Guía completa y migración futura a MongoDB Atlas en [`docs/despliegue.md`](docs/despliegue.md).
 
 ## Flujo de trabajo Git (GitHub Flow + SDD)
 
@@ -232,7 +254,7 @@ npm test
 | [`docs/modelo-datos.md`](docs/modelo-datos.md) | Colecciones, validadores, índices, diagrama Mermaid, decisiones de embebido/referencia y comparación con el modelo relacional. |
 | [`docs/consultas-mongodb.md`](docs/consultas-mongodb.md) | Consultas y agregaciones en `mongosh`, índices y `explain("executionStats")`. |
 | [`docs/studio3t.md`](docs/studio3t.md) | Guía de Studio 3T con consultas listas para IntelliShell y capturas sugeridas. |
-| [`docs/despliegue.md`](docs/despliegue.md) | Demo local en Windows y despliegue opcional en MongoDB Atlas + Render + GitHub Pages. |
+| [`docs/despliegue.md`](docs/despliegue.md) | Demo local en Windows, funcionamiento del pipeline y migración futura a MongoDB Atlas + backend en la nube. |
 | [`database/pedidos_utmach.js`](database/pedidos_utmach.js) | Script de creación de la base (fuente de verdad del esquema). |
 | [`database/consultas_pedidos_utmach.js`](database/consultas_pedidos_utmach.js) | Consultas, agregaciones y planes de ejecución de referencia. |
 | [`specs/constitution.md`](specs/constitution.md) | Principios no negociables del proyecto. |
@@ -249,7 +271,7 @@ npm test
 | 4 · Carrito y pedido | `004-carrito-pedido` | ✅ Completada |
 | 5 · Estados de pedidos | `005-estado-pedidos` | ✅ Completada |
 | 6 · Reportes | `006-reportes` | ✅ Completada |
-| 7 · CI y despliegue | `ci/github-actions` | ⏳ Pendiente |
+| 7 · CI y despliegue | `ci/github-actions` | ✅ Completada |
 
 ---
 
