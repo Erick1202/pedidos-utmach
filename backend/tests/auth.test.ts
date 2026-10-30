@@ -100,6 +100,31 @@ describe("autenticación", () => {
       });
     });
 
+    it("rechaza una contraseña sin mayúscula, número o símbolo", async () => {
+      const respuesta = await request(app).post("/api/auth/registro").send({
+        nombre: "Clave Débil",
+        email: "clave.debil@utmachala.edu.ec",
+        password: "solominusculas"
+      });
+
+      expect(respuesta.status).toBe(400);
+      expect(respuesta.body.error).toBe("Datos inválidos");
+
+      const detalles = respuesta.body.detalles as Array<{
+        campo: string;
+        mensaje: string;
+      }>;
+      expect(detalles).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            campo: "password",
+            mensaje:
+              "La contraseña debe incluir mayúscula, minúscula, número y símbolo"
+          })
+        ])
+      );
+    });
+
     it("rechaza datos inválidos y un rol enviado por el cliente", async () => {
       const respuesta = await request(app).post("/api/auth/registro").send({
         nombre: "Al",
