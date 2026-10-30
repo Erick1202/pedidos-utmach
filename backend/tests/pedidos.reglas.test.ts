@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { calcularTotales } from "../src/modules/pedidos/pedidos.reglas.js";
+import {
+  calcularTotales,
+  validarHoraRecogida
+} from "../src/modules/pedidos/pedidos.reglas.js";
+
+/** 09:00 en Ecuador (UTC-5). */
+const AHORA = new Date("2026-10-29T14:00:00Z");
+
+/** Construye una fecha con la hora local de Ecuador del 29 de octubre de 2026. */
+const enEcuador = (hora: string, dia = "2026-10-29") => new Date(`${dia}T${hora}-05:00`);
 
 describe("calcularTotales", () => {
   it("calcula el subtotal de cada línea y el total", () => {
@@ -48,5 +57,73 @@ describe("calcularTotales", () => {
       subtotal: 10
     });
     expect(resultado.total).toBe(10);
+  });
+});
+
+describe("validarHoraRecogida", () => {
+  const MENSAJE_HORARIO = "La hora de recogida debe estar entre las 07:00 y las 16:00";
+  const MENSAJE_FUTURO = "La hora de recogida debe ser posterior a la hora actual";
+
+  it("acepta una hora futura dentro del horario", () => {
+    expect(validarHoraRecogida(enEcuador("12:30:00"), AHORA)).toEqual({ valido: true });
+  });
+
+  it("acepta los límites 07:00 y 16:00 de Ecuador", () => {
+    const temprano = new Date("2026-10-29T11:00:00Z"); // 06:00 en Ecuador
+
+    expect(validarHoraRecogida(enEcuador("07:00:00"), temprano)).toEqual({ valido: true });
+    expect(validarHoraRecogida(enEcuador("16:00:00"), AHORA)).toEqual({ valido: true });
+  });
+
+  it("rechaza las 06:59 y las 16:01 de Ecuador", () => {
+    const temprano = new Date("2026-10-29T11:00:00Z");
+
+    expect(validarHoraRecogida(enEcuador("06:59:00"), temprano)).toEqual({
+      valido: false,
+      mensaje: MENSAJE_HORARIO
+    });
+    expect(validarHoraRecogida(enEcuador("16:01:00"), AHORA)).toEqual({
+      valido: false,
+      mensaje: MENSAJE_HORARIO
+    });
+    expect(validarHoraRecogida(enEcuador("16:00:01"), AHORA)).toEqual({
+      valido: false,
+      mensaje: MENSAJE_HORARIO
+    });
+  });
+
+  it("usa la hora de Ecuador y no la UTC", () => {
+    // 15:00Z es 10:00 en Ecuador (válida); 22:00Z es 17:00 en Ecuador (inválida)
+    expect(validarHoraRecogida(new Date("2026-10-29T15:00:00Z"), AHORA)).toEqual({
+      valido: true
+    });
+    expect(validarHoraRecogida(new Date("2026-10-29T22:00:00Z"), AHORA)).toEqual({
+      valido: false,
+      mensaje: MENSAJE_HORARIO
+    });
+  });
+
+  it("rechaza una hora pasada o igual a la actual", () => {
+    expect(validarHoraRecogida(enEcuador("08:30:00"), AHORA)).toEqual({
+      valido: false,
+      mensaje: MENSAJE_FUTURO
+    });
+    expect(validarHoraRecogida(AHORA, AHORA)).toEqual({
+      valido: false,
+      mensaje: MENSAJE_FUTURO
+    });
+  });
+
+  it("acepta un día futuro dentro del horario", () => {
+    expect(validarHoraRecogida(enEcuador("07:30:00", "2026-10-30"), AHORA)).toEqual({
+      valido: true
+    });
+  });
+
+  it("rechaza una fecha inválida", () => {
+    expect(validarHoraRecogida(new Date("no es fecha"), AHORA)).toEqual({
+      valido: false,
+      mensaje: "La hora de recogida no es válida"
+    });
   });
 });
