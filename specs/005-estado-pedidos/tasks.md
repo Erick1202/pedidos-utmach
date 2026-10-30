@@ -13,7 +13,7 @@
 
 ## B. Backend — regla pura (TDD)
 
-- [ ] `test:` prueba en rojo de `siguienteEstado` (CA-01).
+- [x] `test:` prueba en rojo de `siguienteEstado` (CA-01).
 - [ ] `feat:` implementar `siguienteEstado` (CA-01).
 - [ ] `refactor:` derivar el tipo `EstadoPedido` de `ESTADOS_PEDIDO` (CA-01).
 

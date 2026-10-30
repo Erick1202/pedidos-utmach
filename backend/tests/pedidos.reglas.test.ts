@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   calcularTotales,
+  siguienteEstado,
   validarCantidades,
   validarHoraRecogida
 } from "../src/modules/pedidos/pedidos.reglas.js";
@@ -150,5 +151,30 @@ describe("validarCantidades", () => {
       valido: false,
       mensaje: MENSAJE_CANTIDAD
     });
+  });
+});
+
+describe("siguienteEstado", () => {
+  it.each([
+    ["recibido", "preparando"],
+    ["preparando", "listo"],
+    ["listo", "entregado"]
+  ])("avanza de %s a %s", (actual, siguiente) => {
+    expect(siguienteEstado(actual)).toBe(siguiente);
+  });
+
+  it("no permite avanzar un pedido entregado (409)", () => {
+    expect(() => siguienteEstado("entregado")).toThrow(
+      expect.objectContaining({
+        estado: 409,
+        message: "El pedido ya fue entregado y no puede avanzar"
+      })
+    );
+  });
+
+  it.each(["cancelado", "", "RECIBIDO"])("rechaza el estado inválido «%s» (400)", (valor) => {
+    expect(() => siguienteEstado(valor)).toThrow(
+      expect.objectContaining({ estado: 400, message: `El estado «${valor}» no es válido` })
+    );
   });
 });
