@@ -4,6 +4,7 @@ import type { Db } from "mongodb";
 import { manejadorErrores } from "./middleware/errores.js";
 import { noEncontrado } from "./middleware/no-encontrado.js";
 import { crearRutasAuth } from "./modules/auth/auth.routes.js";
+import { crearRutasCategorias } from "./modules/categorias/categorias.routes.js";
 import { crearRutasSalud } from "./modules/salud/salud.routes.js";
 
 export const ORIGEN_PERMITIDO = "http://localhost:4200";
@@ -31,6 +32,7 @@ export function crearApp(db: Db, opciones: OpcionesApp): Express {
 
   app.use("/api/salud", crearRutasSalud(db));
   app.use("/api/auth", crearRutasAuth(db, opciones.jwtSecret));
+  app.use("/api/categorias", crearRutasCategorias(db, opciones.jwtSecret));
 
   app.use(noEncontrado);
   app.use(manejadorErrores);

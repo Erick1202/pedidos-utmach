@@ -13,12 +13,12 @@
 
 ## B. Backend — categorías
 
-- [ ] Crear el esquema `idMongo` y el redondeo a 2 decimales en `utils/validacion.ts`.
-- [ ] Implementar `generarSlug` (CA-02).
-- [ ] `GET /api/categorias` ordenado por nombre (CA-01).
-- [ ] `POST /api/categorias` con slug y `409` por duplicado (CA-02, CA-03).
-- [ ] `PUT /api/categorias/:id` con `updateMany` de la copia embebida (CA-04).
-- [ ] `DELETE /api/categorias/:id` con `409` si tiene productos (CA-05).
+- [x] Crear el esquema `idMongo` y el redondeo a 2 decimales en `utils/validacion.ts`.
+- [x] Implementar `generarSlug` (CA-02).
+- [x] `GET /api/categorias` ordenado por nombre (CA-01).
+- [x] `POST /api/categorias` con slug y `409` por duplicado (CA-02, CA-03).
+- [x] `PUT /api/categorias/:id` con `updateMany` de la copia embebida (CA-04).
+- [x] `DELETE /api/categorias/:id` con `409` si tiene productos (CA-05).
 
 ## C. Backend — productos
 
