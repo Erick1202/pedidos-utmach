@@ -13,7 +13,7 @@
 
 ## B. Backend — reglas puras (TDD)
 
-- [ ] `test:` prueba en rojo de `calcularTotales` (CA-01).
+- [x] `test:` prueba en rojo de `calcularTotales` (CA-01).
 - [ ] `feat:` implementar `calcularTotales` (CA-01).
 - [ ] `test:` prueba en rojo de `validarHoraRecogida` (CA-02).
 - [ ] `feat:` implementar `validarHoraRecogida` con `America/Guayaquil` (CA-02).
