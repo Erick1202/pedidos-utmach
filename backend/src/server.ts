@@ -11,7 +11,10 @@ async function iniciar(): Promise<void> {
     console.info(`[db] ${coleccion}: ${total} documentos`);
   }
 
-  const app = crearApp(db, { jwtSecret: entorno.JWT_SECRET });
+  const app = crearApp(db, {
+    jwtSecret: entorno.JWT_SECRET,
+    origenesCors: entorno.CORS_ORIGINS
+  });
   const servidor = app.listen(entorno.PORT, () => {
     console.info(`[api] PedidosUTMACH escuchando en http://localhost:${entorno.PORT}/api`);
   });

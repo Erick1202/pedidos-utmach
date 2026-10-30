@@ -9,11 +9,12 @@ import { crearRutasCategorias } from "./modules/categorias/categorias.routes.js"
 import { crearRutasProductos } from "./modules/productos/productos.routes.js";
 import { crearRutasReportes } from "./modules/reportes/reportes.routes.js";
 import { crearRutasSalud } from "./modules/salud/salud.routes.js";
-
-export const ORIGEN_PERMITIDO = "http://localhost:4200";
+import { ORIGENES_CORS_POR_DEFECTO } from "./config/cors.js";
 
 export interface OpcionesApp {
   jwtSecret: string;
+  /** Orígenes permitidos por CORS; por defecto, el frontend local y GitHub Pages. */
+  origenesCors?: readonly string[];
   /** Reloj inyectable para que las pruebas de pedidos y reportes sean deterministas. */
   ahora?: () => Date;
 }
@@ -29,7 +30,7 @@ export function crearApp(db: Db, opciones: OpcionesApp): Express {
   app.disable("x-powered-by");
   app.use(
     cors({
-      origin: [ORIGEN_PERMITIDO],
+      origin: [...(opciones.origenesCors ?? ORIGENES_CORS_POR_DEFECTO)],
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"]
     })
