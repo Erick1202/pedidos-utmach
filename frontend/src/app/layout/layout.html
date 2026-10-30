@@ -25,11 +25,18 @@
         </a>
         @if (esAdmin()) {
           <a
-            routerLink="/admin"
+            routerLink="/admin/productos"
             routerLinkActive="bg-white/20"
             class="rounded-lg px-3 py-2 text-sm font-semibold text-blue-50 transition hover:bg-white/10"
           >
-            Administración
+            Productos
+          </a>
+          <a
+            routerLink="/admin/categorias"
+            routerLinkActive="bg-white/20"
+            class="rounded-lg px-3 py-2 text-sm font-semibold text-blue-50 transition hover:bg-white/10"
+          >
+            Categorías
           </a>
         }
       </nav>

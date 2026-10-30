@@ -27,7 +27,26 @@ export const routes: Routes = [
       {
         path: 'admin',
         canActivate: [adminGuard],
-        loadComponent: () => import('./features/admin/admin').then((modulo) => modulo.Admin),
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/admin/admin').then((modulo) => modulo.Admin),
+          },
+          {
+            path: 'productos',
+            loadComponent: () =>
+              import('./features/admin/productos/admin-productos').then(
+                (modulo) => modulo.AdminProductos,
+              ),
+          },
+          {
+            path: 'categorias',
+            loadComponent: () =>
+              import('./features/admin/categorias/admin-categorias').then(
+                (modulo) => modulo.AdminCategorias,
+              ),
+          },
+        ],
       },
       { path: '', pathMatch: 'full', redirectTo: 'menu' },
     ],

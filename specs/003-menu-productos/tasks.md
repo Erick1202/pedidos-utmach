@@ -47,9 +47,9 @@
 
 ## F. Frontend — administración
 
-- [ ] Admin de productos: listado, formulario de crear/editar con selector de categoría, switch de disponibilidad y eliminación (CA-16).
-- [ ] Admin de categorías: lista, crear, editar y eliminar (CA-16).
-- [ ] Rutas protegidas por rol y enlaces en la navbar (CA-17).
+- [x] Admin de productos: listado, formulario de crear/editar con selector de categoría, switch de disponibilidad y eliminación (CA-16).
+- [x] Admin de categorías: lista, crear, editar y eliminar (CA-16).
+- [x] Rutas protegidas por rol y enlaces en la navbar (CA-17).
 
 ## G. Verificación y cierre
 
