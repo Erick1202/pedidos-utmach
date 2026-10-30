@@ -2,7 +2,7 @@
 
 **Issue:** #5
 **Rama:** `004-carrito-pedido`
-**Estado:** en progreso
+**Estado:** completada
 **Depende de:** fase 2 (`002-autenticacion`), fase 3 (`003-menu-productos`) y de la colección `pedidos` existente (40 documentos y validador `$jsonSchema` estricto).
 
 ## Contexto

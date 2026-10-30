@@ -41,6 +41,15 @@
 
 ## E. Verificación y cierre
 
-- [ ] Lint, pruebas y build del backend; pruebas y build del frontend (CA-13).
-- [ ] Prueba real con `ana.torres@utmachala.edu.ec`: `pedidos` pasa de 40 a 41 (CA-13).
-- [ ] Actualizar `README.md`, `specs/README.md` y la documentación de la API.
+- [x] Lint, pruebas y build del backend; pruebas y build del frontend (CA-13).
+- [x] Prueba real con `ana.torres@utmachala.edu.ec`: `pedidos` pasa de 40 a 41 (CA-13).
+- [x] Actualizar `README.md`, `specs/README.md` y la documentación de la API.
+
+## Resultados de la verificación
+
+- Ciclo TDD en el historial: `test:` (rojo) → `feat:` (verde) para `calcularTotales`, `validarHoraRecogida` y `validarCantidades`, más un `refactor:` sin cambios de comportamiento.
+- Backend: `npm run lint` sin advertencias, `npm test` **8 archivos / 113 pruebas** en verde (18 de reglas puras y 14 de integración) y `npm run build` sin errores.
+- Frontend: `npm run build` sin errores y `npm test -- --watch=false` **9 archivos / 39 pruebas** en verde.
+- Base real: `ana.torres@utmachala.edu.ec` creó un pedido (Bolón ×2 + Café pasado ×1 = $3.60, recogida 2026-10-30 10:00) enviando `precioUnitario: 0.01` y `total: 0.01`, que se ignoraron; `pedidos` pasó de **40 a 41** (conteo con el driver) con `ObjectId` y `Date` en los campos esperados. `Tigrillo` → 400 con su nombre; admin → 403.
+- Navegador: un administrador que abre `/carrito` es redirigido a `/admin` y no ve el enlace «Carrito».
+- Nota: la interfaz solo permite recoger **hoy**; después de las 16:00 la página de confirmación indica que el bar ya no recibe pedidos. La prueba real se hizo por la API con la fecha del día siguiente.
