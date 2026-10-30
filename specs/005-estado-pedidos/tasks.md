@@ -19,10 +19,10 @@
 
 ## C. Backend — endpoints
 
-- [ ] Esquemas zod de `limite` y `fecha`, y `rangoDiaEcuador` (CA-02, CA-03).
-- [ ] `GET /api/pedidos/mios` con `ix_usuario_fecha` (CA-02).
-- [ ] `GET /api/pedidos/activos` con `ix_estado_hora` y filtro por fecha (CA-03).
-- [ ] `PATCH /api/pedidos/:id/estado` con `updateOne` condicional y 409 (CA-04, CA-06, CA-07).
+- [x] Esquemas zod de `limite` y `fecha`, y `rangoDiaEcuador` (CA-02, CA-03).
+- [x] `GET /api/pedidos/mios` con `ix_usuario_fecha` (CA-02).
+- [x] `GET /api/pedidos/activos` con `ix_estado_hora` y filtro por fecha (CA-03).
+- [x] `PATCH /api/pedidos/:id/estado` con `updateOne` condicional y 409 (CA-04, CA-06, CA-07).
 - [ ] Pruebas de integración: permisos, orden, aislamiento, secuencia, concurrencia y validador (CA-02 a CA-08).
 
 ## D. Frontend

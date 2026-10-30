@@ -29,3 +29,28 @@ export const esquemaCrearPedido = z.object({
 });
 
 export type DatosCrearPedido = z.infer<typeof esquemaCrearPedido>;
+
+/** `GET /mios?limite`: paginación simple, por defecto 20 pedidos. */
+export const esquemaMisPedidos = z.object({
+  limite: z.coerce
+    .number({ error: "El límite debe ser un número" })
+    .int("El límite debe ser un número entero")
+    .min(1, "El límite debe estar entre 1 y 50")
+    .max(50, "El límite debe estar entre 1 y 50")
+    .default(20)
+});
+
+/** `GET /activos?fecha=AAAA-MM-DD`: día de recogida en Ecuador (opcional). */
+export const esquemaPedidosActivos = z.object({
+  fecha: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "La fecha debe tener el formato AAAA-MM-DD")
+    .refine(
+      (valor) => {
+        const fecha = new Date(`${valor}T00:00:00Z`);
+        return !Number.isNaN(fecha.getTime()) && fecha.toISOString().startsWith(valor);
+      },
+      "La fecha no existe en el calendario"
+    )
+    .optional()
+});

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   calcularTotales,
+  rangoDiaEcuador,
   siguienteEstado,
   validarCantidades,
   validarHoraRecogida
@@ -176,5 +177,18 @@ describe("siguienteEstado", () => {
     expect(() => siguienteEstado(valor)).toThrow(
       expect.objectContaining({ estado: 400, message: `El estado «${valor}» no es válido` })
     );
+  });
+});
+
+describe("rangoDiaEcuador", () => {
+  it("delimita el día entre las 05:00Z y las 05:00Z del día siguiente", () => {
+    expect(rangoDiaEcuador("2026-10-29")).toEqual({
+      desde: new Date("2026-10-29T05:00:00Z"),
+      hasta: new Date("2026-10-30T05:00:00Z")
+    });
+  });
+
+  it("cruza correctamente el fin de mes", () => {
+    expect(rangoDiaEcuador("2026-10-31").hasta).toEqual(new Date("2026-11-01T05:00:00Z"));
   });
 });

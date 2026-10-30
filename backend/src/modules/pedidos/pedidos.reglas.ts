@@ -120,3 +120,15 @@ export function siguienteEstado(estadoActual: string): EstadoPedido {
 
   return siguiente;
 }
+
+/** Estados que el bar todavía debe atender. */
+export const ESTADOS_ACTIVOS: EstadoPedido[] = ["recibido", "preparando", "listo"];
+
+/**
+ * Límites de un día de calendario (`AAAA-MM-DD`) en Ecuador: de 05:00Z a
+ * 05:00Z del día siguiente. Ecuador continental no usa horario de verano.
+ */
+export function rangoDiaEcuador(fecha: string): { desde: Date; hasta: Date } {
+  const desde = new Date(`${fecha}T00:00:00-05:00`);
+  return { desde, hasta: new Date(desde.getTime() + 24 * 3600 * 1000) };
+}
