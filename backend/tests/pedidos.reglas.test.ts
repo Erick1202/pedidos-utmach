@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   calcularTotales,
+  validarCantidades,
   validarHoraRecogida
 } from "../src/modules/pedidos/pedidos.reglas.js";
 
@@ -124,6 +125,30 @@ describe("validarHoraRecogida", () => {
     expect(validarHoraRecogida(new Date("no es fecha"), AHORA)).toEqual({
       valido: false,
       mensaje: "La hora de recogida no es válida"
+    });
+  });
+});
+
+describe("validarCantidades", () => {
+  const MENSAJE_CANTIDAD = "La cantidad de cada producto debe ser un entero entre 1 y 20";
+
+  it("acepta cantidades enteras entre 1 y 20", () => {
+    expect(validarCantidades([{ cantidad: 1 }, { cantidad: 7 }, { cantidad: 20 }])).toEqual({
+      valido: true
+    });
+  });
+
+  it("exige al menos una línea", () => {
+    expect(validarCantidades([])).toEqual({
+      valido: false,
+      mensaje: "El pedido debe tener al menos un producto"
+    });
+  });
+
+  it.each([0, -1, 21, 1.5, Number.NaN])("rechaza la cantidad %s", (cantidad) => {
+    expect(validarCantidades([{ cantidad: 2 }, { cantidad }])).toEqual({
+      valido: false,
+      mensaje: MENSAJE_CANTIDAD
     });
   });
 });
