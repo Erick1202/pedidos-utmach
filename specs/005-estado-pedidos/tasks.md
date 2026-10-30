@@ -31,7 +31,7 @@
 - [x] Utilidades de estados y `pedidosQuePasaronAListo` con pruebas (CA-09, CA-11).
 - [x] Página «Mis pedidos» con sondeo, colores y línea de tiempo (CA-09, CA-13).
 - [x] Enlace en la navbar y redirección tras confirmar (CA-10).
-- [ ] Tablero «Pedidos activos» con filtro, botones y manejo del 409 (CA-11, CA-12, CA-13).
+- [x] Tablero «Pedidos activos» con filtro, botones y manejo del 409 (CA-11, CA-12, CA-13).
 
 ## E. Verificación y cierre
 

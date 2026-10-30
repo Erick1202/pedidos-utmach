@@ -19,7 +19,8 @@ import { AuthService } from '../../core/auth/auth.service';
             Panel del administrador
           </h1>
           <p class="mt-2 max-w-xl text-sm leading-relaxed text-blue-100">
-            Bienvenido, {{ usuario()?.nombre }}. Desde aquí administras el menú del bar.
+            Bienvenido, {{ usuario()?.nombre }}. Desde aquí administras el menú y los pedidos del
+            bar.
           </p>
         </div>
       </div>
@@ -51,13 +52,18 @@ import { AuthService } from '../../core/auth/auth.service';
           </p>
         </a>
 
-        <article class="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-5">
-          <p class="text-xs font-bold uppercase tracking-wide text-slate-400">Próximamente</p>
-          <h2 class="mt-2 text-lg font-bold text-slate-700">Gestión de pedidos</h2>
+        <a
+          routerLink="/admin/pedidos"
+          class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-utmach-azul-claro hover:shadow-md focus:outline-none focus-visible:ring-4 focus-visible:ring-utmach-azul-claro/30"
+        >
+          <p class="text-xs font-bold uppercase tracking-wide text-utmach-azul-claro">Bar</p>
+          <h2 class="mt-2 text-lg font-bold text-slate-900 group-hover:text-utmach-azul">
+            Pedidos activos →
+          </h2>
           <p class="mt-2 text-sm leading-relaxed text-slate-500">
-            Recibe pedidos, actualiza su estado y consulta los reportes del bar.
+            Atiende los pedidos del día y avánzalos de recibido a entregado.
           </p>
-        </article>
+        </a>
       </div>
     </section>
   `,
