@@ -9,7 +9,8 @@
         Hola, {{ usuario()?.nombre }}
       </h1>
       <p class="mt-2 max-w-xl text-sm leading-relaxed text-blue-100">
-        Elige lo que quieres comer hoy. Pronto podrás armar tu pedido y recogerlo sin hacer fila.
+        Elige lo que quieres comer hoy, arma tu pedido y recógelo a la hora que prefieras sin hacer
+        fila.
       </p>
 
       <label for="buscar-producto" class="sr-only">Buscar productos</label>
@@ -166,14 +167,31 @@
             <p class="mt-1 line-clamp-2 flex-1 text-sm leading-relaxed text-slate-500">
               {{ producto.descripcion }}
             </p>
-            <button
-              type="button"
-              disabled
-              title="El carrito estará disponible en la próxima versión"
-              class="mt-4 w-full cursor-not-allowed rounded-xl bg-slate-100 py-2.5 text-sm font-bold text-slate-500"
-            >
-              Agregar al carrito · Próximamente
-            </button>
+            @if (!esAdmin()) {
+              @let enCarrito = carrito.cantidadDe(producto._id);
+              <button
+                type="button"
+                (click)="agregar(producto)"
+                [disabled]="enCarrito >= cantidadMaxima"
+                [attr.aria-label]="'Agregar ' + producto.nombre + ' al carrito'"
+                class="mt-4 w-full rounded-xl bg-utmach-azul py-2.5 text-sm font-bold text-white shadow-md shadow-blue-900/20 transition hover:bg-utmach-azul-oscuro focus:outline-none focus-visible:ring-4 focus-visible:ring-utmach-azul-claro/30 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                @if (enCarrito >= cantidadMaxima) {
+                  Máximo {{ cantidadMaxima }} por producto
+                } @else {
+                  Agregar al carrito
+                }
+              </button>
+              @if (enCarrito > 0) {
+                <p
+                  class="mt-2 text-center text-xs font-semibold text-utmach-azul-claro"
+                  aria-live="polite"
+                >
+                  {{ enCarrito }} en tu carrito ·
+                  <a routerLink="/carrito" class="underline hover:text-utmach-azul">Ver carrito</a>
+                </p>
+              }
+            }
           </div>
         </li>
       }

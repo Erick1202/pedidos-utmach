@@ -35,7 +35,7 @@
 - [x] `CarritoService` con signals y `localStorage`, con pruebas (CA-09, CA-10).
 - [x] `PedidosService` y utilidades de hora de recogida, con pruebas (CA-11).
 - [x] `estudianteGuard` con pruebas (CA-12).
-- [ ] Botón «Agregar al carrito» y contador en la navbar (CA-09).
+- [x] Botón «Agregar al carrito» y contador en la navbar (CA-09).
 - [ ] Página Carrito (CA-10).
 - [ ] Página Confirmar pedido con selector de hora y mensaje de éxito (CA-11).
 

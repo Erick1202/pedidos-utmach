@@ -38,6 +38,25 @@
           >
             Categorías
           </a>
+        } @else {
+          <a
+            routerLink="/carrito"
+            routerLinkActive="bg-white/20"
+            class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-blue-50 transition hover:bg-white/10"
+            [attr.aria-label]="'Carrito, ' + cantidadEnCarrito() + ' productos'"
+          >
+            Carrito
+            <span
+              class="min-w-6 rounded-full px-1.5 py-0.5 text-center text-xs font-black"
+              [class]="
+                cantidadEnCarrito() > 0
+                  ? 'bg-utmach-amarillo text-utmach-azul-oscuro'
+                  : 'bg-white/15 text-blue-50'
+              "
+              aria-hidden="true"
+              >{{ cantidadEnCarrito() }}</span
+            >
+          </a>
         }
       </nav>
 
