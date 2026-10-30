@@ -1,0 +1,17 @@
+# Normaliza los finales de línea para que el repositorio funcione igual en
+# Windows (PowerShell) y en los runners Linux de GitHub Actions.
+* text=auto eol=lf
+
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
