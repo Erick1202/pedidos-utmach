@@ -4,5 +4,5 @@
 
 Contenido previsto:
 
-1. **Demo local en Windows:** verificar el servicio de MongoDB, `npm run db:setup`, `npm run seed`, backend con `npm run dev` y frontend con `ng serve`.
+1. **Demo local en Windows:** verificar el servicio de MongoDB, confirmar la base `pedidos_utmach` y sus conteos, backend con `npm run dev:backend` y frontend con `npm run dev:frontend`.
 2. **Despliegue opcional en la nube:** migración de la base local a MongoDB Atlas M0 con `mongodump`/`mongorestore`, backend en Render con sus variables de entorno y frontend en GitHub Pages.
