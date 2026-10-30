@@ -52,7 +52,7 @@ Datos propios y deterministas (se vacía `pedidos` y se insertan 5 pedidos de An
 
 ### 5. Chart.js directo (sin ng2-charts)
 
-Se instala solo `chart.js` y se registra lo necesario (`BarController`, `DoughnutController`, escalas, `Tooltip`, `Legend`). Un componente `Grafico` recibe la configuración con `input.required()`, crea el `Chart` sobre un `<canvas>` en `afterNextRender`, lo recrea con un `effect` cuando cambia la configuración y lo destruye en `DestroyRef.onDestroy`.
+Se instala solo `chart.js` y se registra lo necesario (`BarController`, `DoughnutController`, escalas, `Tooltip`, `Legend`). Un componente `Grafico` recibe la configuración con `input.required()`, crea el `Chart` sobre un `<canvas>` con `afterRenderEffect` (después del render), lo recrea cuando cambia la configuración y lo destruye en `DestroyRef.onDestroy`.
 
 **Motivo:** ng2-charts añade un envoltorio y su propia matriz de compatibilidad con cada versión mayor de Angular; con Angular 22 no hay garantía de soporte inmediato. Chart.js directo es una dependencia menos y el envoltorio necesario son ~40 líneas.
 
@@ -75,7 +75,7 @@ frontend/src/app/
 - Paleta UTMACH: azul `#003087`, azul claro `#1d4ed8`, amarillo `#f2b705` y tonos de apoyo para la dona.
 - Montos con `CurrencyPipe` (`USD`, `es-EC` ya configurado), horas como `HH:00`.
 - Si el resumen trae `totales.pedidos === 0`, el panel muestra «Sin datos en este rango» en lugar de gráficos.
-- Ruta `/admin/reportes` protegida por `adminGuard`, tarjeta en el panel del admin y enlace en la navbar.
+- Ruta `/admin/reportes` protegida por `adminGuard`, tarjeta en el panel del admin y enlace en la navbar. Con cinco enlaces de admin, la navbar pasa a `flex-wrap` para no recortar «Categorías» a 360 px.
 
 ## Riesgos y mitigaciones
 

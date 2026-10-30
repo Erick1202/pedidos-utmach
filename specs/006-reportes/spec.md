@@ -2,7 +2,7 @@
 
 **Issue:** #7
 **Rama:** `006-reportes`
-**Estado:** en curso
+**Estado:** completada
 **Depende de:** fases 4 y 5 (pedidos con `items` embebidos, `total`, `horaRecogida`, `estado` y `usuario`).
 
 ## Contexto

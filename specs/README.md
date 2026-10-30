@@ -37,7 +37,7 @@ specs/00X-nombre/
 | [`003-menu-productos/`](003-menu-productos/) | `003-menu-productos` | Catálogo, filtros, búsqueda de texto y CRUD admin | ✅ Completada |
 | [`004-carrito-pedido/`](004-carrito-pedido/) | `004-carrito-pedido` | Carrito, hora de recogida y creación del pedido (TDD) | ✅ Completada |
 | [`005-estado-pedidos/`](005-estado-pedidos/) | `005-estado-pedidos` | Mis pedidos, pedidos activos y transiciones (TDD) | ✅ Completada |
-| `006-reportes/` | `006-reportes` | Agregaciones, panel de reportes y documentación MongoDB | ⏳ Pendiente |
+| [`006-reportes/`](006-reportes/) | `006-reportes` | Agregaciones, panel de reportes y documentación MongoDB | ✅ Completada |
 | `007-ci-despliegue/` | `ci/github-actions` | GitHub Actions y guía de despliegue | ⏳ Pendiente |
 
 > Las carpetas de las fases 1 a 7 se crean al inicio de su fase, **antes** de escribir el código correspondiente. La fase 0 solo define la constitución y la estructura del repositorio.

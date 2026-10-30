@@ -175,9 +175,9 @@ Todas las rutas usan el prefijo `/api` y responden JSON.
 | Productos (admin) | `POST /productos`, `PUT /productos/:id`, `PATCH /productos/:id/disponible`, `DELETE /productos/:id` | Admin |
 | Pedidos | `POST /pedidos`, `GET /pedidos/mios` | Estudiante |
 | Pedidos (admin) | `GET /pedidos/activos`, `PATCH /pedidos/:id/estado` | Admin |
-| Reportes | `GET /reportes/mas-vendidos`, `/ventas-por-dia`, `/hora-pico`, `/ventas-por-categoria`, `/resumen` | Admin |
+| Reportes | `GET /reportes/mas-vendidos`, `/ventas-por-dia`, `/hora-pico`, `/ventas-por-categoria`, `/por-estudiante`, `/resumen` (`?desde=&hasta=`) | Admin |
 
-El detalle de cada endpoint se documenta en [`specs/`](specs/) y en las pruebas del backend. Hasta la fase 5 están implementados **Salud**, **Autenticación**, **Categorías**, **Productos** y **Pedidos**: creación (contrato en [`specs/004-carrito-pedido/plan.md`](specs/004-carrito-pedido/plan.md)), `GET /pedidos/mios?limite`, `GET /pedidos/activos?fecha=AAAA-MM-DD` y `PATCH /pedidos/:id/estado` (contrato en [`specs/005-estado-pedidos/plan.md`](specs/005-estado-pedidos/plan.md)). Los reportes se agregan en la fase 6.
+El detalle de cada endpoint se documenta en [`specs/`](specs/) y en las pruebas del backend. Hasta la fase 6 están implementados **Salud**, **Autenticación**, **Categorías**, **Productos**, **Pedidos** y **Reportes**: creación (contrato en [`specs/004-carrito-pedido/plan.md`](specs/004-carrito-pedido/plan.md)), `GET /pedidos/mios?limite`, `GET /pedidos/activos?fecha=AAAA-MM-DD` y `PATCH /pedidos/:id/estado` (contrato en [`specs/005-estado-pedidos/plan.md`](specs/005-estado-pedidos/plan.md)). Los reportes usan las agregaciones B1–B6 de `database/consultas_pedidos_utmach.js` (contrato en [`specs/006-reportes/plan.md`](specs/006-reportes/plan.md) y explicación en [`docs/consultas-mongodb.md`](docs/consultas-mongodb.md)).
 
 ## Pruebas
 
@@ -248,7 +248,7 @@ npm test
 | 3 · Menú, productos y admin | `003-menu-productos` | ✅ Completada |
 | 4 · Carrito y pedido | `004-carrito-pedido` | ✅ Completada |
 | 5 · Estados de pedidos | `005-estado-pedidos` | ✅ Completada |
-| 6 · Reportes | `006-reportes` | ⏳ Pendiente |
+| 6 · Reportes | `006-reportes` | ✅ Completada |
 | 7 · CI y despliegue | `ci/github-actions` | ⏳ Pendiente |
 
 ---
