@@ -35,4 +35,12 @@
 - [x] `docs/despliegue.md`: demo local, pipeline con Mermaid y migración futura a Atlas (CA-09).
 - [x] README: «Integración continua», badge, app publicada, backend local y fases en ✅ (CA-09).
 - [x] `specs/README.md`, `docs/README.md` y enmienda 1.2.0 de la constitución.
-- [ ] Validar el YAML y ejecutar localmente los comandos de los jobs `backend` y `frontend`.
+- [x] Validar el YAML y ejecutar localmente los comandos de los jobs `backend` y `frontend`.
+
+## Resultados de la verificación
+
+- YAML: parseo estricto (`yaml`, claves únicas) y validación contra el esquema de workflows con `@action-validator/cli` sin errores; jobs `backend`, `frontend` y `deploy`.
+- Job `backend` en local (`CI=true`): `npm ci`, `npm run lint` sin advertencias, `npm test` **11 archivos / 181 pruebas** en verde (6 nuevas en `cors.test.ts`; la prueba de CORS de `salud.test.ts` se movió allí) y `npm run build` sin errores.
+- Job `frontend` en local (`CI=true`): `npm ci`, `npm run test:ci` en Chromium headless **13 archivos / 57 pruebas** en verde, `ng build --base-href /pedidos-utmach/` sin advertencias y `404.html` copiado con `<base href="/pedidos-utmach/">`.
+- `ChromeHeadless` no es válido con Playwright («Browser "chrome" is not supported»): se usa `ChromiumHeadless` (ver `plan.md`).
+- Pendiente fuera del repositorio: la primera ejecución real en GitHub y el despliegue en Pages (requieren la configuración descrita en `docs/despliegue.md`).
