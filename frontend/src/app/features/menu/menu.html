@@ -1,0 +1,182 @@
+<section class="space-y-6">
+  <div
+    class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-utmach-azul to-utmach-azul-claro p-6 text-white shadow-xl shadow-blue-900/15 sm:p-8"
+  >
+    <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10"></div>
+    <div class="relative">
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-blue-100">Bar UTMACH</p>
+      <h1 class="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
+        Hola, {{ usuario()?.nombre }}
+      </h1>
+      <p class="mt-2 max-w-xl text-sm leading-relaxed text-blue-100">
+        Elige lo que quieres comer hoy. Pronto podrás armar tu pedido y recogerlo sin hacer fila.
+      </p>
+
+      <label for="buscar-producto" class="sr-only">Buscar productos</label>
+      <div class="relative mt-5 max-w-xl">
+        <svg
+          class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9 3.5a5.5 5.5 0 1 0 3.47 9.77l3.63 3.63a.75.75 0 1 0 1.06-1.06l-3.63-3.63A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <input
+          id="buscar-producto"
+          type="search"
+          autocomplete="off"
+          placeholder="Buscar bolón, café, jugo…"
+          [value]="busqueda()"
+          (input)="buscar($event)"
+          class="w-full rounded-xl border-0 bg-white py-3 pl-11 pr-4 text-sm text-slate-900 shadow-lg shadow-blue-950/20 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-utmach-amarillo/60"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0"
+    role="group"
+    aria-label="Filtrar por categoría"
+  >
+    <button
+      type="button"
+      (click)="seleccionarCategoria(null)"
+      [attr.aria-pressed]="categoriaSeleccionada() === null"
+      class="shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-utmach-azul-claro/30"
+      [class]="
+        categoriaSeleccionada() === null
+          ? 'border-utmach-azul bg-utmach-azul text-white shadow-md shadow-blue-900/20'
+          : 'border-slate-200 bg-white text-slate-600 hover:border-utmach-azul-claro hover:text-utmach-azul'
+      "
+    >
+      Todos
+    </button>
+    @for (categoria of categorias(); track categoria._id) {
+      <button
+        type="button"
+        (click)="seleccionarCategoria(categoria._id)"
+        [attr.aria-pressed]="categoriaSeleccionada() === categoria._id"
+        class="shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-utmach-azul-claro/30"
+        [class]="
+          categoriaSeleccionada() === categoria._id
+            ? 'border-utmach-azul bg-utmach-azul text-white shadow-md shadow-blue-900/20'
+            : 'border-slate-200 bg-white text-slate-600 hover:border-utmach-azul-claro hover:text-utmach-azul'
+        "
+      >
+        {{ categoria.nombre }}
+      </button>
+    }
+  </div>
+
+  @if (error()) {
+    <div
+      class="flex flex-col gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 sm:flex-row sm:items-center sm:justify-between"
+      role="alert"
+    >
+      <p>{{ error() }}</p>
+      <button
+        type="button"
+        (click)="reintentar()"
+        class="shrink-0 rounded-lg bg-red-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-red-700"
+      >
+        Reintentar
+      </button>
+    </div>
+  } @else if (cargando()) {
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-live="polite">
+      <span class="sr-only">Cargando productos…</span>
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <div class="animate-pulse overflow-hidden rounded-2xl border border-slate-200 bg-white">
+          <div class="aspect-[4/3] bg-slate-200"></div>
+          <div class="space-y-3 p-4">
+            <div class="h-4 w-2/3 rounded bg-slate-200"></div>
+            <div class="h-3 w-full rounded bg-slate-100"></div>
+            <div class="h-3 w-1/2 rounded bg-slate-100"></div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (productos().length === 0) {
+    <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+      <p class="text-4xl" aria-hidden="true">🍽️</p>
+      <h2 class="mt-3 text-lg font-bold text-slate-900">No encontramos productos</h2>
+      <p class="mt-1 text-sm text-slate-500">
+        @if (hayFiltros()) {
+          Prueba con otra búsqueda o categoría.
+        } @else {
+          Por ahora no hay productos disponibles en el menú.
+        }
+      </p>
+      @if (hayFiltros()) {
+        <button
+          type="button"
+          (click)="limpiarFiltros()"
+          class="mt-5 rounded-lg bg-utmach-azul px-4 py-2 text-sm font-bold text-white transition hover:bg-utmach-azul-oscuro"
+        >
+          Ver todo el menú
+        </button>
+      }
+    </div>
+  } @else {
+    <p class="text-sm text-slate-500" aria-live="polite">
+      {{ productos().length }} {{ productos().length === 1 ? 'producto' : 'productos' }}
+    </p>
+    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      @for (producto of productos(); track producto._id) {
+        <li
+          class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+        >
+          <div class="relative aspect-[4/3] bg-blue-50">
+            @if (producto.imagenUrl && !imagenesFallidas().has(producto._id)) {
+              <img
+                [src]="producto.imagenUrl"
+                [alt]="producto.nombre"
+                loading="lazy"
+                (error)="marcarImagenFallida(producto._id)"
+                class="h-full w-full object-cover"
+              />
+            } @else {
+              <div
+                class="flex h-full w-full items-center justify-center text-5xl font-black text-utmach-azul/30"
+                aria-hidden="true"
+              >
+                {{ producto.nombre.charAt(0) }}
+              </div>
+            }
+            <span
+              class="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-utmach-azul shadow-sm"
+            >
+              {{ producto.categoria.nombre }}
+            </span>
+          </div>
+
+          <div class="flex flex-1 flex-col p-4">
+            <div class="flex items-start justify-between gap-3">
+              <h2 class="text-base font-bold leading-snug text-slate-900">{{ producto.nombre }}</h2>
+              <p class="shrink-0 text-lg font-black text-utmach-azul">
+                {{ producto.precio | currency: 'USD' : 'symbol' : '1.2-2' }}
+              </p>
+            </div>
+            <p class="mt-1 line-clamp-2 flex-1 text-sm leading-relaxed text-slate-500">
+              {{ producto.descripcion }}
+            </p>
+            <button
+              type="button"
+              disabled
+              title="El carrito estará disponible en la próxima versión"
+              class="mt-4 w-full cursor-not-allowed rounded-xl bg-slate-100 py-2.5 text-sm font-bold text-slate-500"
+            >
+              Agregar al carrito · Próximamente
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</section>

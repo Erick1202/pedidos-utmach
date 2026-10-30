@@ -40,10 +40,10 @@
 
 ## E. Frontend — catálogo
 
-- [ ] Definir los modelos `Categoria`, `Producto` y `DatosProducto`.
-- [ ] Crear `CategoriasService` y `ProductosService` con pruebas.
-- [ ] Registrar la configuración regional `es-EC` para los precios.
-- [ ] Menú del estudiante: tarjetas, chips, buscador con debounce, carga, vacío, error y botón «Próximamente» (CA-15).
+- [x] Definir los modelos `Categoria`, `Producto` y `DatosProducto`.
+- [x] Crear `CategoriasService` y `ProductosService` con pruebas.
+- [x] Registrar la configuración regional `es-EC` para los precios.
+- [x] Menú del estudiante: tarjetas, chips, buscador con debounce, carga, vacío, error y botón «Próximamente» (CA-15).
 
 ## F. Frontend — administración
 
