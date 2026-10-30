@@ -10,6 +10,7 @@ import {
 import { adminGuard } from './admin.guard';
 import { authGuard } from './auth.guard';
 import { AuthService } from './auth.service';
+import { estudianteGuard } from './estudiante.guard';
 import { guestGuard } from './guest.guard';
 
 function preparar(autenticado: boolean, esAdmin: boolean) {
@@ -105,5 +106,31 @@ describe('guards de autenticación', () => {
 
     expect(resultado).toBeInstanceOf(UrlTree);
     expect(router.serializeUrl(resultado as UrlTree)).toBe('/menu');
+  });
+
+  it('estudianteGuard permite el acceso al estudiante', () => {
+    const { ruta, estado } = preparar(true, false);
+
+    const resultado = TestBed.runInInjectionContext(() => estudianteGuard(ruta, estado));
+
+    expect(resultado).toBe(true);
+  });
+
+  it('estudianteGuard envía al administrador a /admin', () => {
+    const { router, ruta, estado } = preparar(true, true);
+
+    const resultado = TestBed.runInInjectionContext(() => estudianteGuard(ruta, estado));
+
+    expect(resultado).toBeInstanceOf(UrlTree);
+    expect(router.serializeUrl(resultado as UrlTree)).toBe('/admin');
+  });
+
+  it('estudianteGuard envía al login cuando no hay sesión', () => {
+    const { router, ruta, estado } = preparar(false, false);
+
+    const resultado = TestBed.runInInjectionContext(() => estudianteGuard(ruta, estado));
+
+    expect(resultado).toBeInstanceOf(UrlTree);
+    expect(router.serializeUrl(resultado as UrlTree)).toBe('/login');
   });
 });

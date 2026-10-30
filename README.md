@@ -56,7 +56,7 @@ PROYECTOPARCIAL/
 │   └── src/
 │       ├── app/
 │       │   ├── core/             # Modelos, AuthService, almacenamiento, interceptor y guards
-│       │   ├── features/         # Login, registro, menú y administración
+│       │   ├── features/         # Login, registro, menú, carrito, confirmación y administración
 │       │   └── layout/           # Navbar y contenedor de rutas protegidas
 │       └── environments/         # URL de la API por entorno
 ├── docs/                         # Modelo de datos, consultas, Studio 3T, despliegue
@@ -177,7 +177,7 @@ Todas las rutas usan el prefijo `/api` y responden JSON.
 | Pedidos (admin) | `GET /pedidos/activos`, `PATCH /pedidos/:id/estado` | Admin |
 | Reportes | `GET /reportes/mas-vendidos`, `/ventas-por-dia`, `/hora-pico`, `/ventas-por-categoria`, `/resumen` | Admin |
 
-El detalle de cada endpoint se documenta en [`specs/`](specs/) y en las pruebas del backend. Hasta la fase 3 están implementados **Salud**, **Autenticación**, **Categorías** y **Productos** (contratos en [`specs/003-menu-productos/plan.md`](specs/003-menu-productos/plan.md)); las rutas de pedidos y reportes se agregan en las fases 4 a 6.
+El detalle de cada endpoint se documenta en [`specs/`](specs/) y en las pruebas del backend. Hasta la fase 4 están implementados **Salud**, **Autenticación**, **Categorías**, **Productos** y la creación de pedidos `POST /pedidos` (contrato en [`specs/004-carrito-pedido/plan.md`](specs/004-carrito-pedido/plan.md)); `GET /pedidos/mios`, las rutas de administración de pedidos y los reportes se agregan en las fases 5 y 6.
 
 ## Pruebas
 
@@ -246,7 +246,7 @@ npm test
 | 1 · Backend base y documentación del modelo | `001-backend-base` | ✅ Completada |
 | 2 · Autenticación y guards | `002-autenticacion` | ✅ Completada |
 | 3 · Menú, productos y admin | `003-menu-productos` | ✅ Completada |
-| 4 · Carrito y pedido | `004-carrito-pedido` | ⏳ Pendiente |
+| 4 · Carrito y pedido | `004-carrito-pedido` | ✅ Completada |
 | 5 · Estados de pedidos | `005-estado-pedidos` | ⏳ Pendiente |
 | 6 · Reportes | `006-reportes` | ⏳ Pendiente |
 | 7 · CI y despliegue | `ci/github-actions` | ⏳ Pendiente |

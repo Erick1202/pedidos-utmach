@@ -8,7 +8,7 @@ import type { Db, Document } from "mongodb";
  * mismo Pull Request. Las pruebas de `validadores.test.ts` detectan
  * desincronizaciones básicas.
  */
-const VALIDADORES: Record<string, Document> = {
+export const VALIDADORES: Record<string, Document> = {
   usuarios: {
     $jsonSchema: {
       bsonType: "object",
