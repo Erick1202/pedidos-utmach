@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { idMongo } from "../../utils/validacion.js";
+import { fechaCalendario, idMongo } from "../../utils/validacion.js";
 
 /**
  * Sin `.strict()` a propósito: zod descarta las claves desconocidas, de modo
@@ -42,15 +42,5 @@ export const esquemaMisPedidos = z.object({
 
 /** `GET /activos?fecha=AAAA-MM-DD`: día de recogida en Ecuador (opcional). */
 export const esquemaPedidosActivos = z.object({
-  fecha: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "La fecha debe tener el formato AAAA-MM-DD")
-    .refine(
-      (valor) => {
-        const fecha = new Date(`${valor}T00:00:00Z`);
-        return !Number.isNaN(fecha.getTime()) && fecha.toISOString().startsWith(valor);
-      },
-      "La fecha no existe en el calendario"
-    )
-    .optional()
+  fecha: fechaCalendario.optional()
 });
