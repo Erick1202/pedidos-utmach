@@ -5,6 +5,8 @@ import { redondearMonto } from "../../utils/validacion.js";
  * sistema, para poder probarlas de forma determinista.
  */
 
+export type ResultadoValidacion = { valido: true } | { valido: false; mensaje: string };
+
 export interface LineaConPrecio {
   precioUnitario: number;
   cantidad: number;
@@ -15,25 +17,15 @@ export interface TotalesPedido<T extends LineaConPrecio> {
   total: number;
 }
 
-/** Subtotal por línea y total del pedido, redondeados a dos decimales. */
-export function calcularTotales<T extends LineaConPrecio>(items: T[]): TotalesPedido<T> {
-  const conSubtotal = items.map((item) => ({
-    ...item,
-    subtotal: redondearMonto(item.precioUnitario * item.cantidad)
-  }));
-
-  const total = redondearMonto(
-    conSubtotal.reduce((suma, item) => suma + item.subtotal, 0)
-  );
-
-  return { items: conSubtotal, total };
-}
-
-export type ResultadoValidacion = { valido: true } | { valido: false; mensaje: string };
-
 export const ZONA_HORARIA = "America/Guayaquil";
+export const CANTIDAD_MINIMA = 1;
+export const CANTIDAD_MAXIMA = 20;
+
 const APERTURA_SEGUNDOS = 7 * 3600;
 const CIERRE_SEGUNDOS = 16 * 3600;
+
+const VALIDO: ResultadoValidacion = { valido: true };
+const invalido = (mensaje: string): ResultadoValidacion => ({ valido: false, mensaje });
 
 const formatoHoraEcuador = new Intl.DateTimeFormat("en-US", {
   timeZone: ZONA_HORARIA,
@@ -52,40 +44,45 @@ function segundosDelDiaEnEcuador(fecha: Date): number {
   return valor("hour") * 3600 + valor("minute") * 60 + valor("second");
 }
 
+/** Subtotal por línea y total del pedido, redondeados a dos decimales. */
+export function calcularTotales<T extends LineaConPrecio>(items: T[]): TotalesPedido<T> {
+  const conSubtotal = items.map((item) => ({
+    ...item,
+    subtotal: redondearMonto(item.precioUnitario * item.cantidad)
+  }));
+
+  const total = redondearMonto(
+    conSubtotal.reduce((suma, item) => suma + item.subtotal, 0)
+  );
+
+  return { items: conSubtotal, total };
+}
+
 /**
  * La hora de recogida debe ser posterior a `ahora` y estar entre las 07:00
  * y las 16:00 (inclusive) en la zona `America/Guayaquil`.
  */
 export function validarHoraRecogida(fecha: Date, ahora: Date): ResultadoValidacion {
   if (Number.isNaN(fecha.getTime())) {
-    return { valido: false, mensaje: "La hora de recogida no es válida" };
+    return invalido("La hora de recogida no es válida");
   }
 
   if (fecha.getTime() <= ahora.getTime()) {
-    return {
-      valido: false,
-      mensaje: "La hora de recogida debe ser posterior a la hora actual"
-    };
+    return invalido("La hora de recogida debe ser posterior a la hora actual");
   }
 
   const segundos = segundosDelDiaEnEcuador(fecha);
   if (segundos < APERTURA_SEGUNDOS || segundos > CIERRE_SEGUNDOS) {
-    return {
-      valido: false,
-      mensaje: "La hora de recogida debe estar entre las 07:00 y las 16:00"
-    };
+    return invalido("La hora de recogida debe estar entre las 07:00 y las 16:00");
   }
 
-  return { valido: true };
+  return VALIDO;
 }
-
-export const CANTIDAD_MINIMA = 1;
-export const CANTIDAD_MAXIMA = 20;
 
 /** Al menos una línea y cada cantidad entera entre 1 y 20. */
 export function validarCantidades(items: Array<{ cantidad: number }>): ResultadoValidacion {
   if (items.length === 0) {
-    return { valido: false, mensaje: "El pedido debe tener al menos un producto" };
+    return invalido("El pedido debe tener al menos un producto");
   }
 
   const cantidadInvalida = items.some(
@@ -94,11 +91,8 @@ export function validarCantidades(items: Array<{ cantidad: number }>): Resultado
   );
 
   if (cantidadInvalida) {
-    return {
-      valido: false,
-      mensaje: "La cantidad de cada producto debe ser un entero entre 1 y 20"
-    };
+    return invalido("La cantidad de cada producto debe ser un entero entre 1 y 20");
   }
 
-  return { valido: true };
+  return VALIDO;
 }
